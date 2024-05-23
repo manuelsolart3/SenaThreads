@@ -1,10 +1,9 @@
-﻿namespace SenaThreads.Domain.Tweets
+﻿namespace SenaThreads.Domain.Tweets;
+
+public enum ReactionType
 {
-    public enum ReactionType
-    {
-        Like,
-        Haha,
-        Angry,
-        Love,
-    }
+    Like,
+    Haha,
+    Angry,
+    Love,
 }

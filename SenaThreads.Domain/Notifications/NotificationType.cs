@@ -1,10 +1,9 @@
-﻿namespace SenaThreads.Domain.Notifications
+﻿namespace SenaThreads.Domain.Notifications;
+
+public enum NotificationType
 {
-    public enum NotificationType
-    {
-        Reaction,
-        Retweet,
-        Comment,
-        NewFollower
-    }
+    Reaction,
+    Retweet,
+    Comment,
+    NewFollower
 }

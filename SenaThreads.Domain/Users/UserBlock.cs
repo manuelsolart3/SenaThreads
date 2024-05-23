@@ -1,37 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using SenaThreads.Domain.Abstractions;
+﻿using SenaThreads.Domain.Abstractions;
 
-namespace SenaThreads.Domain.Users
+namespace SenaThreads.Domain.Users;
+
+public class UserBlock : Entity
 {
-    public class UserBlock : Entity
+    public Guid Id { get; private set; }
+    public User BlockedUser { get; private set; }
+    public string BlockedUserId { get; private set; }
+    public User BlockByUser { get; private set; }
+    public string BlockByUserId { get; private set; }
+
+    //Enum
+    public BlockSatus BlockSatus { get; private set; }
+
+    public UserBlock(string blockedUserId, string blockByUserId, BlockSatus blockstatus) 
     {
-        
-        public Guid Id { get; set; }
-        public User BlockedUser { get; set; }
-        public string BlockedUserId { get; set; }
-        public User BlockByUser { get; set; }
-        public string BlockByUserId { get; set; }
-
-        
-       
-        
-        
-
-        //Enum
-        public BlockSatus BlockSatus { get; set; }
-
-        public UserBlock(string blockedUserId, string blockByUserId, BlockSatus blockstatus) 
-        {
-            BlockedUserId = blockedUserId;
-            BlockByUserId = blockByUserId;
-            BlockSatus = blockstatus;
-            Id = Guid.NewGuid();    
-           
-            
-
-        }
-
-       
+        Id = Guid.NewGuid();
+        BlockedUserId = blockedUserId;
+        BlockByUserId = blockByUserId;
+        BlockSatus = blockstatus;
     }
 }

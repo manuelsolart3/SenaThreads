@@ -1,9 +1,7 @@
-﻿namespace SenaThreads.Domain.Users
-{
-    public enum BlockSatus
-    {
-        Active,
-        Inactive
+﻿namespace SenaThreads.Domain.Users;
 
-    }
+public enum BlockSatus
+{
+    Inactive,
+    Active
 }
