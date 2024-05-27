@@ -11,7 +11,7 @@ public class Tweet : Entity
     public string Text { get; private set; }
     
     // Propiedades de navegación
-    public List<TweetAttachment> Attachments { get; set; }
+    public ICollection<TweetAttachment> Attachments { get; set; }
     public ICollection<Comment> Comments { get; set; } // Comentarios asociados a este tweet
     public ICollection<Retweet> Retweets { get; set; } // Retweets asociados a este tweet
     public ICollection<Reaction> Reactions { get; set; } //Reacciones asociadas a este tweet
@@ -21,5 +21,13 @@ public class Tweet : Entity
         Id = Guid.NewGuid();
         UserId = userId;
         Text = text;
+    }
+
+    public Tweet(string userId, string text, List<TweetAttachment> attachments)
+    {
+        Id = Guid.NewGuid();
+        UserId = userId;
+        Text = text;
+        Attachments = attachments;
     }
 }

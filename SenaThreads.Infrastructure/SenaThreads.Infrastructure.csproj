@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SenaThreads.Domain\SenaThreads.Domain.csproj" />
+    <ProjectReference Include="..\SenaThreads.Application\SenaThreads.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Events;
 using SenaThreads.Domain.Notifications;
 using SenaThreads.Domain.Tweets;
 using SenaThreads.Domain.Users;
-using SenaThreads.Infrastructure.Configurations;
 
 namespace SenaThreads.Infrastructure;
 
-public class AppDbContext : DbContext
+public class AppDbContext : DbContext, IUnitOfWork
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Follow> Follows { get; set; }
@@ -34,8 +34,10 @@ public class AppDbContext : DbContext
 
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         base.OnModelCreating(builder);
-      
+    }
 
-
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return base.SaveChangesAsync(cancellationToken);
     }
 }
