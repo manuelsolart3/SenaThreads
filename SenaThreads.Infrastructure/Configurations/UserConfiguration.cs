@@ -15,6 +15,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.PhoneNumber).HasMaxLength(20);
         builder.Property(x => x.Biography).HasMaxLength(50);
         builder.Property(x => x.City).HasMaxLength(15);
-        builder.Property(u => u.DateOfBirth).HasColumnType("date");
+        builder.Property(u => u.DateOfBirth);
     }
 }

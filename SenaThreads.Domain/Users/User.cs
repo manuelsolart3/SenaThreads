@@ -12,7 +12,7 @@ public class User : IdentityUser
     public override string PhoneNumber { get; set; }
     public string Biography { get; set; }
     public string City { get; set; }
-    public DateTime? DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 
 
     //Propiedades de navegacion 
