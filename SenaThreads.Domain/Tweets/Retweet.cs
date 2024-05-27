@@ -2,7 +2,7 @@
 using SenaThreads.Domain.Tweets;
 using SenaThreads.Domain.Users;
 
-namespace SenaThreads.Domain.Post;
+namespace SenaThreads.Domain.Tweets;
 
 public class Retweet : Entity
 {

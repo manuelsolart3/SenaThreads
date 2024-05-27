@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SenaThreads.Domain.Events;
 using SenaThreads.Domain.Notifications;
-using SenaThreads.Domain.Post;
 using SenaThreads.Domain.Tweets;
 using SenaThreads.Domain.Users;
+using SenaThreads.Infrastructure.Configurations;
 
 namespace SenaThreads.Infrastructure;
 
@@ -29,7 +29,12 @@ public class AppDbContext : DbContext
     //Creamos el ModelCreate
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        //Con esto registramos la configuración de las entidades de manera automatica,
+        // esto examina todas aquellas clases que hereden de IEntityTypeConfiguration
+
+        builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         base.OnModelCreating(builder);
+      
 
 
     }

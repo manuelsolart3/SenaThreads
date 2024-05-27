@@ -5,7 +5,6 @@ namespace SenaThreads.Domain.Notifications;
 
 public class Notification : Entity
 {
-    
     public Guid Id { get; set; }
     public User User { get; set; }
     public string UserId { get; set; }
