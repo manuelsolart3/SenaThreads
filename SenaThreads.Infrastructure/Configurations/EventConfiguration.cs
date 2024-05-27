@@ -11,9 +11,8 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Title).HasMaxLength(50);
         builder.Property(x => x.Description).HasMaxLength(150);
-        builder.Property(x => x.Image).HasMaxLength(255);
-        builder.Property(x => x.EventDate).HasColumnType("date");
-        builder.Property(x => x.EventHour).HasColumnType("time");
+        builder.Property(x => x.Image);
+        builder.Property(x => x.EventDate);
         builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
     }
 }

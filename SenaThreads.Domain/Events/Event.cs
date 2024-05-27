@@ -13,11 +13,10 @@ public class Event : Entity
     public string Description { get; set; }
     public string Image { get; set; }
     public DateTime EventDate { get; set; }
-    public DateTime EventHour { get; set; }
 
     
 
-    public Event(string userId, string title, string description, string image, DateTime eventDate, DateTime eventHour)
+    public Event(string userId, string title, string description, string image, DateTime eventDate)
     {
         Id = Guid.NewGuid();
         UserId = userId;
@@ -25,6 +24,5 @@ public class Event : Entity
         Description = description;
         Image = image;
         EventDate = eventDate;
-        EventHour = eventHour;
     }
 }
