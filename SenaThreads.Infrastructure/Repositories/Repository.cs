@@ -1,20 +1,43 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SenaThreads.Domain.Abstractions;
+using SenaThreads.Domain.Tweets;
 
 namespace SenaThreads.Infrastructure.Repositories;
 
 public class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
-    private readonly DbSet<TEntity> _dbSet;
+    private readonly DbSet<TEntity> _dbSet;//referencia a la coleccion de entidades 
+    private readonly AppDbContext _context;
 
-    public Repository(AppDbContext appDbContext)
+    public Repository(AppDbContext appDbContext)  
     {
+        _context = appDbContext;
         _dbSet = appDbContext.Set<TEntity>();
     }
 
     public void Add(TEntity entity)
     {
         _dbSet.Add(entity);
+    }
+
+    public void Delete(TEntity entity)
+    {
+        _dbSet.Remove(entity);
+    }
+    public void Update(TEntity entity)
+    {
+        _dbSet.Update(entity);
+       
+    }
+
+    public async Task<TEntity> GetByIdAsync(Guid id)
+    {
+       return await _dbSet.FindAsync(id);
+    }
+
+    public IQueryable<TEntity> Queryable()
+    {
+        return _dbSet;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using SenaThreads.Domain.Abstractions;
-using SenaThreads.Domain.Tweets;
 using SenaThreads.Domain.Users;
 
 namespace SenaThreads.Domain.Tweets;

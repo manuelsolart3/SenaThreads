@@ -10,6 +10,7 @@ public class Notification : Entity
     public string UserId { get; set; }
     public NotificationType Type { get; set; }
     public string Path { get; set; } //Ruta de la accion
+    public bool IsRead { get; set; } = false; //indica si la notifiaciones ha sido leida 
 
     public Notification(string userId, NotificationType type, string path)
     {
