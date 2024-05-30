@@ -15,6 +15,10 @@ public class Follow : Entity
         FollowedByUserId = followedUserId;
         FollowerUserId = followerUserId;
     }
+    public Follow ()
+    {
+
+    }
 }
 
 

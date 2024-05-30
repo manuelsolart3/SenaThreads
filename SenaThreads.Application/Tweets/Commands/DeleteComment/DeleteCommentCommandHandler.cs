@@ -1,6 +1,5 @@
-﻿using MediatR;
-using SenaThreads.Application.Abstractions.Messaging;
-using SenaThreads.Application.Repositories;
+﻿using SenaThreads.Application.Abstractions.Messaging;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
 
@@ -22,13 +21,19 @@ public class DeleteCommentCommandHandler : ICommandHandler<DeleteCommentCommand>
         Tweet tweet = await _tweetRepository.GetByIdAsync(request.TweetId);
         if (tweet == null)
         {
-            return Result.Failure(Error.None); //No se encontro el Tweet
+            return Result.Failure(TweetError.NotFound); //No se encontro el Tweet
         }
         // Verificar si el Comentario existe en el tweet
         Comment comment = tweet.Comments.FirstOrDefault(c => c.Id == request.CommentId);
-        if (comment == null || comment.UserId != request.UserId)
+        if (comment == null)
         {
-            return Result.Failure(Error.None); //no se encontro ningun comment o el usuario no es el creador
+            return Result.Failure(TweetError.CommentNotFound); // No se encontró el comentario
+        }
+
+        // Verificar si el usuario es el creador del comentario
+        if (comment.UserId != request.UserId)
+        {
+            return Result.Failure(TweetError.Unauthorized); // El usuario no es el creador del comentario
         }
 
         tweet.Comments.Remove(comment);

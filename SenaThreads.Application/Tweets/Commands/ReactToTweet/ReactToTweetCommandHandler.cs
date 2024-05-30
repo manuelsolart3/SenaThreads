@@ -1,8 +1,6 @@
 ﻿using System.Data.Entity;
-using MediatR;
 using SenaThreads.Application.Abstractions.Messaging;
-using SenaThreads.Application.Repositories;
-using SenaThreads.Application.Tweets.Commands.PostTweet;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
 

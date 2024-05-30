@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using SenaThreads.Application.Abstractions.Messaging;
-using SenaThreads.Application.Repositories;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Notifications;
 
@@ -22,12 +22,12 @@ public class MarkNotificationAsReadCommandHandler : ICommandHandler<MarkNotifica
         Notification notification = await _notificationRepository.GetByIdAsync(request.NotificationId);
         if (notification == null)
         {
-            return Result.Failure(Error.None);//No se encontro la notificaion
+            return Result.Failure(NotificationError.NotificationNotFound);//No se encontro la notificaion
         }
         //Validar si la notificacion ya fue leida
-        if (notification.IsRead == true)
+        if (notification.IsRead)
         {
-            return Result.Failure(Error.None);
+            return Result.Failure(NotificationError.NotificationAlreadyRead); //Ya fue leida
         }
 
         //Marcamos la notificacion como leida

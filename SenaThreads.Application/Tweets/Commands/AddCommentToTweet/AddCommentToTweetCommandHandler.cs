@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using System.Data.Entity;
 using SenaThreads.Application.Abstractions.Messaging;
-using SenaThreads.Application.Repositories;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
 
@@ -9,27 +9,26 @@ public class AddCommentToTweetCommandHandler : ICommandHandler<AddCommentToTweet
 {
     private readonly ITweetRepository _tweetRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly AddCommentToTweetValidator _validator;
+   
 
     public AddCommentToTweetCommandHandler(
         ITweetRepository tweetRepository,
-        IUnitOfWork unitOfWork,
-        AddCommentToTweetValidator validator)
+        IUnitOfWork unitOfWork
+        )
     {
         _tweetRepository = tweetRepository;
         _unitOfWork = unitOfWork;
-        _validator = validator;
     }
 
     public async Task<Result> Handle(AddCommentToTweetCommand request, CancellationToken cancellationToken)
     {
 
         //Obtener el tweet al que se requiere comentar
-        Tweet tweet = await _tweetRepository.GetByIdAsync(request.TweetId);
+        Tweet tweet = await FetchTweetByIdWithComments(request.TweetId);
         // Verificar si el Tweet existe en la BD
         if (tweet == null)
         {
-            return Result.Failure(Error.None);//no se encontro ningun tweet
+            return Result.Failure(TweetError.NotFound);//no se encontro ningun tweet
         }
 
         //Agregamos el comentario al Tweet
@@ -42,5 +41,14 @@ public class AddCommentToTweetCommandHandler : ICommandHandler<AddCommentToTweet
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return Result.Success();
+    }
+
+    private async Task<Tweet> FetchTweetByIdWithComments (Guid TweetId)
+    {
+        return await _tweetRepository
+            .Queryable()
+            .Where(tweet => tweet.Id == TweetId)
+            .Include(tweet => tweet.Comments)
+            .FirstOrDefaultAsync();
     }
 }

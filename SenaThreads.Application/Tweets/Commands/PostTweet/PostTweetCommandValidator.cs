@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 
 namespace SenaThreads.Application.Tweets.Commands.PostTweet;
-public class PostTweetCommandValidator : AbstractValidator<PostTweetCommand>
+public class PostTweetValidator : AbstractValidator<PostTweetCommand>
 {
-    public PostTweetCommandValidator()
+    public PostTweetValidator()
     {
-        RuleFor(x => x.Text).NotEmpty().WithMessage("El texto del tweet es obligatorio.");
-        RuleFor(x => x.Text).MaximumLength(300).WithMessage("El texto del tweet no puede tener más de 300 caracteres.");
+        RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required.");
+        RuleFor(x => x.Text).NotEmpty().WithMessage("Text is required");
+        RuleFor(x => x.Text).MaximumLength(300).WithMessage("Text cannot exceed 300 characters");
     }
 }

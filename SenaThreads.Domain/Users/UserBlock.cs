@@ -20,4 +20,5 @@ public class UserBlock : Entity
         BlockByUserId = blockByUserId;
         BlockSatus = blockstatus;
     }
+    public UserBlock() { }
 }

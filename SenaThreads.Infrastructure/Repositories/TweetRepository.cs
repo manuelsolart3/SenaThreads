@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Design;
 using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
-using SenaThreads.Application.Repositories;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Tweets;
 
 namespace SenaThreads.Infrastructure.Repositories;

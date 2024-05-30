@@ -1,13 +1,8 @@
-using MediatR;
-using FluentValidation;
-using System.Reflection;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
-using Microsoft.Extensions.DependencyInjection;
-using SenaThreads.Domain.Users;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SenaThreads.Application;
+using SenaThreads.Infrastructure;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,27 +10,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Configuramos la cadena de conexión a la base de datos
 var connectionString = builder.Configuration.GetConnectionString("ConexionMysql");
-
-//Configurar MediatR
-//builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
-
-//builder.Services.AddAuthorization();
-//builder.Services.AddAuthentication().AddCookie(IdentityConstants.ApplicationScheme);
-//builder.Services.AddIdentityCore<User>()
-//    .AddEntityFrameworkStores<AppDbContext>()
-//    .AddApiEndpoints();
-
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseSqlServer(configuration.));
-
-//Configurar FluentValidation
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-builder.Services.AddFluentValidationAutoValidation();  // HabilitaR la validación automática de modelos
+if (connectionString != null)
+{ //Añadir servicios de las capas
+    builder.Services
+        .AddApplication()
+        .AddInfrastructure(connectionString);
+}
 
 
-// Add services to the container.
+// Add services to the container. 
 builder.Services.AddControllersWithViews();
 
+//Añadimos servicios de de Identity
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
 
@@ -52,6 +40,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

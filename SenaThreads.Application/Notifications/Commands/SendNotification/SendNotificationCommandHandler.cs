@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using SenaThreads.Application.Abstractions.Messaging;
-using SenaThreads.Application.Repositories;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Notifications;
 

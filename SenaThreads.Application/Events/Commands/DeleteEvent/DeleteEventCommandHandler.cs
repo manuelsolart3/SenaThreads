@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using MediatR;
 using SenaThreads.Application.Abstractions.Messaging;
-using SenaThreads.Application.Repositories;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Events;
 
@@ -22,10 +22,15 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
         //Obtener el evetno que requiere eliminar
         Event eventDelete = await _eventRepository.GetByIdAsync(request.EventId);
         //Verificar si el evento existe o si el usuario es el creador
-        if (eventDelete == null || eventDelete.UserId != request.UserId)
+        if (eventDelete == null)
         {
-            return Result.Failure(Error.None);//No se encontro el evento o el user no es el propietario
+            return Result.Failure(EventError.NotFound);//No se encontro el evento 
         }
+        if (eventDelete.UserId != request.UserId)
+        {
+            return Result.Failure(EventError.Unauthorized);//No es el creador
+        }
+
         _eventRepository.Delete(eventDelete);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

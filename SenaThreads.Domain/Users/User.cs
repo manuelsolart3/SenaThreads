@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 
+
 namespace SenaThreads.Domain.Users;
 
 public class User : IdentityUser

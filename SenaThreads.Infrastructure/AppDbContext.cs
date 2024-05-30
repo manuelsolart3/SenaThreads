@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.EntityFrameworkCore;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Events;
 using SenaThreads.Domain.Notifications;

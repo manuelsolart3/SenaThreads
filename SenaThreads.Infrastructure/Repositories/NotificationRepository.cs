@@ -1,4 +1,4 @@
-﻿using SenaThreads.Application.Repositories;
+﻿using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Notifications;
 
 namespace SenaThreads.Infrastructure.Repositories;
