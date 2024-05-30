@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;

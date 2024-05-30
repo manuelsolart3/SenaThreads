@@ -1,29 +1,24 @@
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using SenaThreads.Application;
+using SenaThreads.Domain.Users;
 using SenaThreads.Infrastructure;
-
-
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 
-// Configuramos la cadena de conexión a la base de datos
-var connectionString = builder.Configuration.GetConnectionString("ConexionMysql");
-if (connectionString != null)
-{ //Añadir servicios de las capas
-    builder.Services
-        .AddApplication()
-        .AddInfrastructure(connectionString);
-}
+builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Add services to the container. 
 builder.Services.AddControllersWithViews();
 
 //Añadimos servicios de de Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentityCore<User>()
+        .AddEntityFrameworkStores<AppDbContext>()
+        .AddApiEndpoints();
 
 var app = builder.Build();
 
