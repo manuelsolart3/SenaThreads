@@ -10,7 +10,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("ConexionMysql") ??
+        var connectionString = configuration.GetConnectionString("Database") ??
                                        throw new ArgumentNullException(nameof(configuration));
 
         //DbContext y cc de conexion
