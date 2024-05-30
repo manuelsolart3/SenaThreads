@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SenaThreads.Application.Abstractions.Messaging;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
@@ -7,10 +8,10 @@ namespace SenaThreads.Application.Users.Commands.UnFollowUser;
 public class UnfollowUserCommandHandler : ICommandHandler<UnfollowUserCommand>
 {
     private readonly UserManager<User> _userManager;
-    private readonly IRepository<Follow> _followRepository;
+    private readonly IFollowRepository _followRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UnfollowUserCommandHandler(UserManager<User> userManager, IRepository<Follow> followRepository, IUnitOfWork unitOfWork)
+    public UnfollowUserCommandHandler(UserManager<User> userManager, IFollowRepository followRepository, IUnitOfWork unitOfWork)
     {
         _userManager = userManager;
         _followRepository = followRepository;

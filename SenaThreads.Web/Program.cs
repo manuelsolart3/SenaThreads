@@ -12,9 +12,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// Add services to the container. 
-builder.Services.AddControllersWithViews();
-
 //Añadimos servicios de de Identity
 builder.Services.AddIdentityCore<User>()
         .AddEntityFrameworkStores<AppDbContext>()

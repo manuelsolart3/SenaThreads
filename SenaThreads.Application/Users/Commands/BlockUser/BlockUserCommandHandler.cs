@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SenaThreads.Application.Abstractions.Messaging;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
@@ -7,10 +8,10 @@ namespace SenaThreads.Application.Users.Commands.BlockUser;
 public class BlockUserCommandHandler : ICommandHandler<BlockUserCommand>
 {
     private readonly UserManager<User> _userManager;
-    private readonly IRepository<UserBlock> _userBlockRepository;
+    private readonly IUserBlockRepository _userBlockRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public BlockUserCommandHandler(UserManager<User> userManager, IRepository<UserBlock> userBlockRepository, IUnitOfWork unitOfWork)
+    public BlockUserCommandHandler(UserManager<User> userManager, IUserBlockRepository userBlockRepository, IUnitOfWork unitOfWork)
     {
         _userManager = userManager;
         _userBlockRepository = userBlockRepository;
