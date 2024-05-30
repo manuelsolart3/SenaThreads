@@ -10,4 +10,8 @@ public static class UserError
     public static readonly Error UserNotFound = new(
         "User.UserNotFound",
         "The specific User is not found");
+    
+    public static readonly Error RelationNotFound = new(
+        "User.RelationNotFound",
+        "Relation Not Found");
 }

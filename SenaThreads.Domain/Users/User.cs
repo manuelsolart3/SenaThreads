@@ -9,6 +9,7 @@ public class User : IdentityUser
     public string LastName { get; private set; }
 
     //Propiedades Opcionales
+    public string ProfilePictureS3Key { get; set; }
     public override string PhoneNumber { get; set; }
     public string Biography { get; set; }
     public string City { get; set; }
