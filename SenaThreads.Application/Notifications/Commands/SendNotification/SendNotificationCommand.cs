@@ -1,5 +1,4 @@
 ﻿using SenaThreads.Application.Abstractions.Messaging;
-using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Notifications;
 
 namespace SenaThreads.Application.Notifications.Commands.SendNotification;

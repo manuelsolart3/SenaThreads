@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using SenaThreads.Domain.Users;
 
 namespace SenaThreads.Application.Users.Commands.UpdateProfile;
 public class UpdateProfileValidator : AbstractValidator<UpadateProfileCommand>

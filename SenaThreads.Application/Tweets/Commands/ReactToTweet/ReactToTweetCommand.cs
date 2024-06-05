@@ -1,5 +1,4 @@
 ﻿using SenaThreads.Application.Abstractions.Messaging;
-using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
 
 namespace SenaThreads.Application.Tweets.Commands.ReactToTweet;

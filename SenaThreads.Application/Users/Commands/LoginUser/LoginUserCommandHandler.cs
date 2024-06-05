@@ -17,7 +17,7 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand>
     {
         User user = await _userManager.FindByEmailAsync(request.Email);
 
-        // Intento de inicio de sesión utilizando el SignInManager
+        // Intento de inicio de sesión 
         var result = await _userManager.CheckPasswordAsync(user, request.Password);
         if (result)
         {

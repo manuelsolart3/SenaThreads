@@ -1,6 +1,7 @@
-﻿using System.Data.Entity;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
@@ -8,10 +9,10 @@ namespace SenaThreads.Application.Users.Commands.UnBlockUser;
 public class UnBlockUserCommandHandler : ICommandHandler<UnBlockUserCommand>
 {
     private readonly UserManager<User> _userManager;
-    private readonly IRepository<UserBlock> _userBlockRepository;
+    private readonly IUserBlockRepository _userBlockRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UnBlockUserCommandHandler(UserManager<User> userManager, IRepository<UserBlock> userBlockRepository, IUnitOfWork unitOfWork)
+    public UnBlockUserCommandHandler(UserManager<User> userManager, IUserBlockRepository userBlockRepository, IUnitOfWork unitOfWork)
     {
         _userManager = userManager;
         _userBlockRepository = userBlockRepository;
@@ -31,15 +32,15 @@ public class UnBlockUserCommandHandler : ICommandHandler<UnBlockUserCommand>
         //Buscar la relacion de bloqueo
         UserBlock block = await _userBlockRepository
             .Queryable()
-            .FirstOrDefaultAsync(X => X.BlockByUserId == request.BlockedUserId 
-            && X.BlockByUserId == request.BlockByUserId);
+            .FirstOrDefaultAsync(x => x.BlockedUserId == request.BlockedUserId
+            && x.BlockByUserId == request.BlockByUserId);
 
         if (block != null)
-        { 
-         _userBlockRepository.Delete(block);
+        {
+            _userBlockRepository.Delete(block);
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
-            
+
             return Result.Success();
         }
         else

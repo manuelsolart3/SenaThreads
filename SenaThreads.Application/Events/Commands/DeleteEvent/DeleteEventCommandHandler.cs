@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-using MediatR;
-using SenaThreads.Application.Abstractions.Messaging;
+﻿using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Events;

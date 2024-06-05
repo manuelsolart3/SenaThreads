@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
@@ -21,7 +22,7 @@ public class UnfollowUserCommandHandler : ICommandHandler<UnfollowUserCommand>
     public async Task<Result> Handle(UnfollowUserCommand request, CancellationToken cancellationToken)
     {
         User followerUserId = await _userManager.FindByIdAsync(request.FollowerUserId);
-        User followedByUserId = await _userManager.FindByIdAsync(request?.FollowedByUserId);
+        User followedByUserId = await _userManager.FindByIdAsync(request.FollowedByUserId);
 
         if (followerUserId is null || followedByUserId is null)
         {
@@ -29,10 +30,21 @@ public class UnfollowUserCommandHandler : ICommandHandler<UnfollowUserCommand>
         }
 
         //Buscamos la relacion de seugimiento
+        Follow follow = await _followRepository
+            .Queryable()
+            .FirstOrDefaultAsync(x => x.FollowerUserId == request.FollowerUserId
+            && x.FollowedByUserId == request.FollowedByUserId);
+        if (follow != null)
+        {
+            _followRepository.Delete(follow);
 
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-
-
-        return Result.Success();
+            return Result.Success();
+        }
+        else
+        {
+            return Result.Failure(UserError.RelationNotFound);
+        }
     }
 }

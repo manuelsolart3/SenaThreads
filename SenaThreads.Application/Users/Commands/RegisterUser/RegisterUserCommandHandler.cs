@@ -22,7 +22,7 @@ public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
             request.Email,
             request.UserName);
 
-        //Llamar al metodo CreateAsync del UserManager para crear el U en la Bd
+        //Llamar al metodo CreateAsync del UserManager para crear el U en la Bdgi
         await _userManager.CreateAsync(newuser, request.Password);
 
         return Result.Success();

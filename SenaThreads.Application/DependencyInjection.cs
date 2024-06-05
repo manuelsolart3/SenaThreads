@@ -12,10 +12,8 @@ public static class DependencyInjection
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
         });
 
-        // Register Command Validators
-        // Para usar la inyección de dependencias para los validadores de los Command,
-        // es necesario haber instalado la librería 'FluentValidation.DependencyInjectionExtensions'
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+        services.AddAutoMapper(typeof(DependencyInjection).Assembly);
 
         return services;
 

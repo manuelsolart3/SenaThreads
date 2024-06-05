@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using SenaThreads.Application.Abstractions.Messaging;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
@@ -8,13 +9,13 @@ public class FollowUserCommandHandler : ICommandHandler<FollowUserCommand>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
-    private readonly IRepository<Follow> _followRepository;//hacemos uso del repo generico para la entidad follow
+    private readonly IFollowRepository _followRepository;
 
-    public FollowUserCommandHandler(UserManager<User> userManager, IRepository<Follow> followRepository, IUnitOfWork unitOfWork)
+    public FollowUserCommandHandler(UserManager<User> userManager, IUnitOfWork unitOfWork, IFollowRepository followRepository)
     {
         _userManager = userManager;
-        _followRepository = followRepository;
         _unitOfWork = unitOfWork;
+        _followRepository = followRepository;
     }
 
     public async Task<Result> Handle(FollowUserCommand request, CancellationToken cancellationToken)
