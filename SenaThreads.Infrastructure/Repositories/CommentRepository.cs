@@ -17,6 +17,7 @@ public class CommentRepository : Repository<Comment>, ICommentRepository
         return await _appDbContext.Comments 
             .Where(c => c.TweetId == tweetId)// Filtrar los comentarios por el ID del tweet
             .Include(c => c.User) //Incluir la entidad user asociada a cada comentario
+            .Include(c => c.Text) //Incluir el texto del comentario
             .ToListAsync(); 
     }
 }
