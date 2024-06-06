@@ -1,14 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SenaThreads.Domain.Abstractions;
-using SenaThreads.Domain.Tweets;
 
 namespace SenaThreads.Infrastructure.Repositories;
 
 public class Repository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
-    private readonly DbSet<TEntity> _dbSet;//referencia a la coleccion de entidades 
-    private readonly AppDbContext _context;
+    protected readonly DbSet<TEntity> _dbSet;//referencia a la coleccion de entidades 
+    protected readonly AppDbContext _context;
 
     public Repository(AppDbContext appDbContext)  
     {

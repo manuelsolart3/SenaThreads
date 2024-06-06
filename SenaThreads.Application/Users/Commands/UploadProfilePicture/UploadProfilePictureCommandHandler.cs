@@ -15,7 +15,8 @@ public class UploadProfilePictureCommandHandler : ICommandHandler<UploadProfileP
 
     public async Task<Result> Handle(UploadProfilePictureCommand request, CancellationToken cancellationToken)
     {
-      User user = await _userManager.FindByIdAsync(request.UserId);
+        User user = await _userManager.FindByIdAsync(request.UserId);
+
         if (user is  null)
         { 
         return Result.Failure(UserError.UserNotFound);

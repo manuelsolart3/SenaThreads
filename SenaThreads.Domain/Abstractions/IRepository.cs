@@ -1,6 +1,4 @@
-﻿using SenaThreads.Domain.Tweets;
-
-namespace SenaThreads.Domain.Abstractions;
+﻿namespace SenaThreads.Domain.Abstractions;
 
 public interface IRepository<TEntity>
     where TEntity : Entity
