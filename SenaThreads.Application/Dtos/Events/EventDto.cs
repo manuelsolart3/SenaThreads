@@ -10,8 +10,6 @@ public class EventDto
     public string Description { get; set; }
     public string Image { get; set; }
     public DateTime EventDate { get; set; }
-
     public DateTime CreatedOnUtc { get; set; }
-
 
 }
