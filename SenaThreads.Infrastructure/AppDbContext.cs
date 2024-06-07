@@ -15,7 +15,8 @@ public sealed class AppDbContext : IdentityDbContext<User>, IUnitOfWork
         : base(options)
     {
     }
-
+    
+    public override DbSet<User> Users { get; set; }
     public DbSet<Follow> Follows { get; set; }
     public DbSet<UserBlock> UserBlocks { get; set; }
     public DbSet<Tweet> Tweets { get; set; }

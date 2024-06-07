@@ -10,8 +10,14 @@ public class UserBlockConfiguration : IEntityTypeConfiguration<UserBlock>
         builder.ToTable(nameof(UserBlock));
         builder.HasKey(x => x.Id);
         builder.Property(x => x.BlockSatus).HasConversion<int>();
-        builder.HasOne(x => x.BlockedUser).WithMany().HasForeignKey(x => x.BlockedUserId);
-        builder.HasOne(x => x.BlockByUser).WithMany().HasForeignKey(x => x.BlockByUserId);
-        
+
+        builder.HasOne(x => x.BlockedUser)
+       .WithMany(u => u.BlockedUsers)
+       .HasForeignKey(x => x.BlockedUserId);
+
+        builder.HasOne(x => x.BlockByUser)
+               .WithMany(u => u.BlockeByUsers)
+               .HasForeignKey(x => x.BlockByUserId);
+
     }
 }
