@@ -1,4 +1,4 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Notifications;
 

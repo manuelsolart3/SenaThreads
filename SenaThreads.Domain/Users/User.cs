@@ -17,10 +17,10 @@ public class User : IdentityUser
 
 
     //Propiedades de navegacion 
-    public ICollection<UserBlock> BlockedUsers { get; set; } //Usuario bloqueados por este usuario
-    public ICollection<UserBlock> BlockeByUsers { get; set; } //Usuario que han bloqueado este usuario
-    public ICollection<Follow> Followers { get; set; } // Usuarios que siguen a este usuario
-    public ICollection<Follow> Followees { get; set; } // Usuarios que sigue este usuario
+    public virtual ICollection<UserBlock> BlockedUsers { get; set; } //Usuario bloqueados por este usuario
+    public virtual ICollection<UserBlock> BlockeByUsers { get; set; } //Usuario que han bloqueado este usuario
+    public virtual ICollection<Follow> Followers { get; set; } // Usuarios que siguen a este usuario
+    public virtual ICollection<Follow> Followees { get; set; } // Usuarios que sigue este usuario
 
 
     // Constructor de la clase User que inicializa las propiedades principales 

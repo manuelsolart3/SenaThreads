@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using SenaThreads.Domain.Abstractions;
+﻿using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Events;
 using SenaThreads.Domain.Notifications;
 using SenaThreads.Domain.Tweets;
 using SenaThreads.Domain.Users;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace SenaThreads.Infrastructure;
 
-public class AppDbContext : IdentityDbContext<User>, IUnitOfWork
+public sealed class AppDbContext : IdentityDbContext<User>, IUnitOfWork
 {
     //Constructos para configurar DbContextOptions
-    public AppDbContext(DbContextOptions<AppDbContext> options) 
+    public AppDbContext(DbContextOptions options) 
         : base(options)
     {
     }
@@ -26,7 +26,7 @@ public class AppDbContext : IdentityDbContext<User>, IUnitOfWork
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Event> Events { get; set; }
 
-    
+
     //Creamos el ModelCreate
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -34,6 +34,7 @@ public class AppDbContext : IdentityDbContext<User>, IUnitOfWork
         // esto examina todas aquellas clases que hereden de IEntityTypeConfiguration
 
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
         base.OnModelCreating(builder);
     }
 

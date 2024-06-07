@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using SenaThreads.Application.Dtos.Users;
+﻿using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Users;
 

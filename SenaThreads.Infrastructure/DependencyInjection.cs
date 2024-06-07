@@ -20,11 +20,13 @@ public static class DependencyInjection
         });
 
         //reposiotrios
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITweetRepository, TweetRepository>();
-        services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<IFollowRepository, FollowRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
         services.AddScoped<IUserBlockRepository, UserBlockRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
 
         services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
 
