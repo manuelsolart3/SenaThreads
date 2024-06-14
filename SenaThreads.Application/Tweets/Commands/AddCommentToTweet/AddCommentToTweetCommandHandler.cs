@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using System.Runtime.InteropServices;
+using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.IRepositories;
+using SenaThreads.Application.Tweets.Commands.PostTweet;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
 
@@ -52,3 +55,4 @@ public class AddCommentToTweetCommandHandler : ICommandHandler<AddCommentToTweet
             .FirstOrDefaultAsync();
     }
 }
+

@@ -7,4 +7,5 @@ namespace SenaThreads.Application.IRepositories;
 public interface IFollowRepository : IRepository<Follow>
 {
     Task<List<User>> GetFollowersInfoAsyn(string userId);
+    Task<bool> IsFollowing(string followerUserId, string followedUserId);
 }

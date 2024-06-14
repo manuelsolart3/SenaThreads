@@ -22,27 +22,9 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbConte
         var serverVersion = new MySqlServerVersion(new Version(8, 0, 2));
 
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-        optionsBuilder.UseMySql(connectionString,serverVersion);
+        optionsBuilder.UseMySql(connectionString, serverVersion);
 
         return new AppDbContext(optionsBuilder.Options);
     }
 
 }
-
-//public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
-//{
-//    public AppDbContext CreateDbContext(string[] args)
-//    {
-//        // cadena de conexión
-//        var connectionString = "Server=localhost;Port=3306;Database=SenaThreads;Uid=root;Pwd=ms123;AllowUserVariables=True;Encrypt=False";
-
-//        // versión del servidor 
-//        var serverVersion = new MySqlServerVersion(new Version(8, 0, 2)); 
-
-//        var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-//        optionsBuilder.UseMySql(connectionString, serverVersion);
-
-//        return new AppDbContext(optionsBuilder.Options);
-//    }
-
-//}

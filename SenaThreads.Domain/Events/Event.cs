@@ -24,5 +24,7 @@ public class Event : Entity
         Description = description;
         Image = image;
         EventDate = eventDate;
+        CreatedBy = userId;
+        UpdatedBy = userId;
     }
 }

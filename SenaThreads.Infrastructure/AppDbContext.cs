@@ -5,6 +5,7 @@ using SenaThreads.Domain.Tweets;
 using SenaThreads.Domain.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace SenaThreads.Infrastructure;
 
@@ -31,12 +32,20 @@ public sealed class AppDbContext : IdentityDbContext<User>, IUnitOfWork
     //Creamos el ModelCreate
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        base.OnModelCreating(builder);
         //Con esto registramos la configuración de las entidades de manera automatica,
         // esto examina todas aquellas clases que hereden de IEntityTypeConfiguration
-
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
-        base.OnModelCreating(builder);
+        //Excluir las entidades de Identity no necesarias
+        builder.Ignore<IdentityRole>();
+        builder.Ignore<IdentityUserRole<string>>();
+        builder.Ignore<IdentityUserClaim<string>>();
+        builder.Ignore<IdentityUserLogin<string>>();
+        builder.Ignore<IdentityRoleClaim<string>>();
+        builder.Ignore<IdentityUserToken<string>>();
+
+
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

@@ -7,15 +7,12 @@ namespace SenaThreads.Infrastructure.Repositories;
 
 public class TweetRepository : Repository<Tweet>, ITweetRepository
 {
-    private readonly AppDbContext _appDbContext;
     public TweetRepository(AppDbContext appDbContext) : base(appDbContext)
     {
-
-        _appDbContext = appDbContext;
     }
     public async Task<List<Tweet>> GetAllTweetsAsync(string userId = null, bool retweetsOnly = false)
     {
-        IQueryable<Tweet> query = _appDbContext.Tweets // Crear una consulta IQueryable de tweets
+        IQueryable<Tweet> query = _context.Tweets// Crear una consulta IQueryable de tweets
             .Include(t => t.User) // Incluir información del usuario creador del tweet
             .Include(t => t.Attachments) // Incluir adjuntos del tweet
             .Include(t => t.Reactions) // Incluir reacciones del tweet
@@ -33,7 +30,7 @@ public class TweetRepository : Repository<Tweet>, ITweetRepository
 
     public async Task<List<Tweet>> GetMediaTweetsByUserIdAsync(string userId)
     {
-        return await _appDbContext.Tweets
+        return await _dbSet
             .Include(t => t.User) // Incluir información del usuario creador del tweet
             .Include(t => t.Attachments) // Incluir adjuntos del tweet
             .Include(t => t.Reactions) // Incluir reacciones del tweet
@@ -46,7 +43,7 @@ public class TweetRepository : Repository<Tweet>, ITweetRepository
 
     public async Task<List<Tweet>> GetTweetsByUserIdAsync(string userId)
     {
-        return await _appDbContext.Tweets
+        return await _dbSet
             .Include(t => t.User) // Incluir información del usuario creador del tweet
             .Include(t => t.Attachments) // Incluir adjuntos del tweet
             .Include(t => t.Reactions) // Incluir reacciones del tweet

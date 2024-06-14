@@ -20,6 +20,10 @@ public class GetUserRegistrationInfoQueryHandler : IQueryHandler<GetUserRegistra
     public async Task<Result<UserRegistrationInfoDto>> Handle(GetUserRegistrationInfoQuery request, CancellationToken cancellationToken)
     {
         User user = await _userManager.FindByIdAsync(request.UserId);
+        if (user is null)
+        {
+            return (Result<UserRegistrationInfoDto>)Result.Failure(UserError.UserNotFound);
+        }
 
         UserRegistrationInfoDto userDto = _mapper.Map<UserRegistrationInfoDto>(user);
 

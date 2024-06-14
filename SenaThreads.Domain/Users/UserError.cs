@@ -14,4 +14,12 @@ public static class UserError
     public static readonly Error RelationNotFound = new(
         "User.RelationNotFound",
         "Relation Not Found");
+
+    public static readonly Error ErrorupdateResult = new(
+        "User.ErrorupdateResult",
+        "Error updating information");
+
+    public static readonly Error AlreadyExists = new(
+        "User.AlreadyExists",
+        "This action already exist");
 }

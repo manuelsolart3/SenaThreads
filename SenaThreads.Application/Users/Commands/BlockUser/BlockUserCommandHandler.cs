@@ -20,20 +20,30 @@ public class BlockUserCommandHandler : ICommandHandler<BlockUserCommand>
 
     public async Task<Result> Handle(BlockUserCommand request, CancellationToken cancellationToken)
     {
+        //Buscar al usuario bloqueado y usuario que bloquea
         User blockedUserId = await _userManager.FindByIdAsync(request.BlockedUserId);
         User blockByUserId = await _userManager.FindByIdAsync(request.BlockByUserId);
 
+        //Si no existen retorna usuarios no encontrados
         if (blockedUserId is null || blockByUserId is null)
         {
             return Result.Failure(UserError.UserNotFound);
         }
 
+        //si ya el usuario bloqueo al otro usuario
+        if (await _userBlockRepository.IsBlocked(request.BlockedUserId, request.BlockByUserId))
+        {
+            return Result.Failure(UserError.AlreadyExists);
+        }
+
+        //objeto de nuevo user bloqeuado
         UserBlock newUserBlock = new(
            request.BlockedUserId,
            request.BlockByUserId,
            BlockSatus.Active);
 
         _userBlockRepository.Add(newUserBlock);
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success(); 

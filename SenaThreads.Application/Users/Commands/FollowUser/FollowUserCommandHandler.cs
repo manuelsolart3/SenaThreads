@@ -20,6 +20,7 @@ public class FollowUserCommandHandler : ICommandHandler<FollowUserCommand>
 
     public async Task<Result> Handle(FollowUserCommand request, CancellationToken cancellationToken)
     {
+        //Buscar al usuario seguidor y usuario seguido
         User followerUser = await _userManager.FindByIdAsync(request.FollowerUserId);
         User followedByUserId = await _userManager.FindByIdAsync(request.FollowedByUserId);
 
@@ -27,13 +28,22 @@ public class FollowUserCommandHandler : ICommandHandler<FollowUserCommand>
         {
             return Result.Failure(UserError.UserNotFound);
         }
+        // Verificar si ya existe el seguimiento
+        if (await _followRepository.IsFollowing(request.FollowerUserId, request.FollowedByUserId))
+        {
+            return Result.Failure(UserError.AlreadyExists);
+        }
 
-        Follow newfollow = new(
+        //obejto de seguimiento
+        Follow newfollow = new (
             request.FollowerUserId,
             request.FollowedByUserId); 
         
+        //Agregar el nuevo seguimiento 
         _followRepository.Add(newfollow);
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
         return Result.Success();
     }
 }

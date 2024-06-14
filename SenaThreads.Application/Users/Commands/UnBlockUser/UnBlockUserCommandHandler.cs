@@ -37,8 +37,10 @@ public class UnBlockUserCommandHandler : ICommandHandler<UnBlockUserCommand>
 
         if (block != null)
         {
+            // Eliminar el registro de bloqueo
             _userBlockRepository.Delete(block);
 
+            // Guardar cambios en la base de datos
             await _unitOfWork.SaveChangesAsync(cancellationToken);
 
             return Result.Success();

@@ -8,10 +8,10 @@ using SenaThreads.Infrastructure.Repositories;
 namespace SenaThreads.Infrastructure;
 public static class DependencyInjection
 { 
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+   public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("Database") ??
-                                       throw new ArgumentNullException(nameof(configuration));
+                                         throw new ArgumentNullException(nameof(configuration));
 
         //DbContext y cc de conexion
         services.AddDbContext<AppDbContext>(options =>

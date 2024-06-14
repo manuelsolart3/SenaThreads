@@ -13,6 +13,10 @@ public class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.Property(x => x.Description).HasMaxLength(150);
         builder.Property(x => x.Image);
         builder.Property(x => x.EventDate);
-        builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
+
+        //Relacion con user
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId);
     }
 }

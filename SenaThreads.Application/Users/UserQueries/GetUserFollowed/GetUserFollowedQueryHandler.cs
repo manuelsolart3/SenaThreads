@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Users;
@@ -7,22 +6,20 @@ using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
-namespace SenaThreads.Application.Users.UserQueries.GetUserFollowers;
-public class GetUserFollowersQueryHandler : IQueryHandler<GetUserFollowersQuery, Pageable<FollowerDto>>
+namespace SenaThreads.Application.Users.UserQueries.GetUserFollowed;
+public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, Pageable<FollowerDto>>
 {
     private readonly IFollowRepository _followRepository;
     private readonly IMapper _mapper;
 
-    public GetUserFollowersQueryHandler(IFollowRepository followRepository, IMapper mapper)
+    public GetUserFollowedQueryHandler(IFollowRepository followRepository, IMapper mapper)
     {
         _followRepository = followRepository;
         _mapper = mapper;
     }
-
-    public async Task<Result<Pageable<FollowerDto>>> Handle(GetUserFollowersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Pageable<FollowerDto>>> Handle(GetUserFollowedQuery request, CancellationToken cancellationToken)
     {
-        
-        var paginatedFollowers = await FetchData(request.UserId,request.Page,request.PageSize);
+        var paginatedFollowers = await FetchData(request.UserId, request.Page, request.PageSize);
 
         return Result.Success(paginatedFollowers);
     }
@@ -33,11 +30,11 @@ public class GetUserFollowersQueryHandler : IQueryHandler<GetUserFollowersQuery,
         int start = pageSize * (page - 1);
 
         IQueryable<User> followersQuery = _followRepository.Queryable()
-            .Where(f => f.FollowedByUserId == userId)
-            .Include(u => u.FollowerUser) //Incluir la info del usuario
-            .Select(f => f.FollowerUser); //Solo los usuarios seguidores
+            .Where(f => f.FollowerUserId == userId)
+            .Include(u => u.FollowedByUser) //Incluir la info del usuario
+            .Select(f => f.FollowedByUser); //Solo los usuarios seguidos
 
-        //Total de todos los seguidores
+        //Total de todos los seguidos
         int totalCount = await followersQuery.CountAsync();
 
         //Paginacion
@@ -57,6 +54,3 @@ public class GetUserFollowersQueryHandler : IQueryHandler<GetUserFollowersQuery,
         };
     }
 }
-
-
-

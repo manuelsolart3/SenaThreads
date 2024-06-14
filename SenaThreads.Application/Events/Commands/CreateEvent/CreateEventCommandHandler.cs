@@ -21,8 +21,8 @@ public class CreateEventCommandHandler : ICommandHandler<CreateEventCommand>
         Event newEvent = new(
         request.UserId,
         request.Title,
-        request.Description,
-        request.Image,
+        request.Description ?? string.Empty, //utilizar cadenas vacias por si es nulo
+        request.Image ?? string.Empty,
         request.EventDate);
 
         _eventRepository.Add(newEvent);

@@ -12,7 +12,7 @@ public class UpadateProfileCommandHandler : ICommandHandler<UpadateProfileComman
     {
         _userManager = userManager;
     }
-
+    
     public async Task<Result> Handle(UpadateProfileCommand request, CancellationToken cancellationToken)
     {
         User user = await _userManager.FindByIdAsync(request.UserId);
@@ -21,16 +21,38 @@ public class UpadateProfileCommandHandler : ICommandHandler<UpadateProfileComman
             return Result.Failure(UserError.UserNotFound);
         }
 
-        //Crear o Actualizar propiedades opcionales
-        user.PhoneNumber = request.PhoneNumber;
-        user.Biography = request.Biography;
-        user.City = request.City;
-        user.DateOfBirth = request.DateOfBirth;
+        // Actualizar solo los campos que no sean nulos
+        if (request.PhoneNumber is not null)
+        {
+            user.PhoneNumber = request.PhoneNumber;
+        }
+
+        if (request.Biography is not null)
+        {
+            user.Biography = request.Biography;
+        }
+
+        if (request.City is not null)
+        {
+            user.City = request.City;
+        }
+
+        if (request.DateOfBirth.HasValue)
+        {
+            user.DateOfBirth = request.DateOfBirth.Value;
+        }
+
 
         //Guardar los cambios
-        await _userManager.UpdateAsync(user);
+        var updateResult = await _userManager.UpdateAsync(user);
 
-        return Result.Success();
-
+        if (updateResult.Succeeded)
+        {
+            return Result.Success();
+        }
+        else
+        {
+            return Result.Failure(UserError.ErrorupdateResult);
+        }
     }
 }

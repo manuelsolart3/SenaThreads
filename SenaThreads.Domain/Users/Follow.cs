@@ -16,6 +16,8 @@ public class Follow : Entity
         Id = Guid.NewGuid();
         FollowedByUserId = followedUserId;
         FollowerUserId = followerUserId;
+        CreatedBy = followerUserId;
+        UpdatedBy = followerUserId;
     }
     public Follow ()
     {

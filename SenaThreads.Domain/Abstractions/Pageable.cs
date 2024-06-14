@@ -6,3 +6,5 @@ public class Pageable<TEntity>
     public List<TEntity> List { get; set; }
     public int Count { get; set; }
 }
+
+
