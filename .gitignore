@@ -377,3 +377,5 @@ dockerfile.dev
 
 # Configuration for Jetbrains Rider
 .idea
+
+.DS_Store
