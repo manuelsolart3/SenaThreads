@@ -32,20 +32,20 @@ public class GetUserTweetsQueryHandler : IQueryHandler<GetUserTweetsQuery, Pagea
 
         // Construir la consulta de tweets para el usuario específico
         IQueryable<Tweet> tweetsQuery = _tweetRepository.Queryable()
-            .Include(t => t.User)        // Incluir información del usuario creador del tweet
-            .Include(t => t.Attachments) // Incluir adjuntos del tweet
-            .Include(t => t.Reactions)   // Incluir reacciones del tweet
-            .Include(t => t.Retweets)    // Incluir retweets del tweet
-            .Include(t => t.Comments)    // Incluir comentarios del tweet
-            .Where(t => t.UserId == userId)// Filtrar por el Id de usuario
+            .Include(t => t.User)       
+            .Include(t => t.Attachments) 
+            .Include(t => t.Reactions)   
+            .Include(t => t.Retweets)    
+            .Include(t => t.Comments)  
+            .Where(t => t.UserId == userId)
             .OrderByDescending(t => t.CreatedOnUtc);
 
         int totalCount = await tweetsQuery.CountAsync(); // Obtener el número total de tweets para el usuario
 
         List<Tweet> pagedTweets = await tweetsQuery
-            .Skip(start)        // Saltar los registros según el índice de inicio calculado
-            .Take(pageSize)     // Tomar la cantidad de registros especificada por el tamaño de página
-            .ToListAsync();     // Ejecutar la consulta y obtener los resultados como una lista en memoria
+            .Skip(start)       
+            .Take(pageSize)    
+            .ToListAsync();   
 
         // Mapear los tweets paginados a DTOs de información básica
         List<BasicTweetInfoDto> tweetDtos = _mapper.Map<List<BasicTweetInfoDto>>(pagedTweets);

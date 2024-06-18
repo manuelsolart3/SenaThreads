@@ -38,17 +38,4 @@ public class TweetRepository : Repository<Tweet>, ITweetRepository
         .Where(t => t.UserId == userId && t.Attachments.Any())
         .ToListAsync();
     }
-
-
-    public async Task<List<Tweet>> GetTweetsByUserIdAsync(string userId)
-    {
-        return await _dbSet
-            .Include(t => t.User) // Incluir información del usuario creador del tweet
-            .Include(t => t.Attachments) // Incluir adjuntos del tweet
-            .Include(t => t.Reactions) // Incluir reacciones del tweet
-            .Include(t => t.Retweets) // Incluir retweets del tweet
-            .Include(t => t.Comments) // Incluir comentarios del tweet
-        .Where(t => t.UserId == userId)
-        .ToListAsync();
-    }
 }

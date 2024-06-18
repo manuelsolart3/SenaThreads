@@ -6,6 +6,7 @@ using SenaThreads.Application.Tweets.Commands.DeleteTweet;
 using SenaThreads.Application.Tweets.Commands.PostTweet;
 using SenaThreads.Application.Tweets.Commands.ReactToTweet;
 using SenaThreads.Application.Tweets.Queries.GetAllTweets;
+using SenaThreads.Application.Tweets.Queries.GetTweetComments;
 using SenaThreads.Application.Tweets.Queries.GetUserTweets;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowers;
 
@@ -115,4 +116,19 @@ public class TweetController : ControllerBase //proporciona funcionalidades
 
         return BadRequest(result.Error);
     }
+
+    //OBTENER TODOS LOS COMENTARIOS DE UN TWEET
+    [HttpGet("comments")]
+    public async Task<IActionResult> GetTweetComments([FromQuery] GetTweetCommentsQuery query, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
+
 }

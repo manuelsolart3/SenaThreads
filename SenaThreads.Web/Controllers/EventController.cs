@@ -53,10 +53,9 @@ public class EventController : ControllerBase
 
     //OBTENER TODOS LOS EVENTOS
     [HttpGet("all")]
-    public async Task<ActionResult<List<EventDto>>> GetAllEvents()
+    public async Task<ActionResult> GetAllEvents([FromQuery] GetAllEventsQuery query, CancellationToken cancellationToken)
     {
-        var query = new GetAllEventsQuery();
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         if (result.IsSuccess)
         {
@@ -69,11 +68,10 @@ public class EventController : ControllerBase
     }
 
     //OBTENER EVENTOS DE UN USUARIO
-    [HttpGet("user/{userId}")]
-    public async Task<ActionResult<List<EventDto>>> GetUserEvents(string userId)
+    [HttpGet("user")]
+    public async Task<ActionResult> GetUserEvents([FromQuery] GetUserEventsQuery query, CancellationToken cancellationToken)
     {
-        var query = new GetUserEventsQuery(userId);
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(query, cancellationToken);
 
         if (result.IsSuccess)
         {

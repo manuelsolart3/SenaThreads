@@ -37,7 +37,8 @@ public class GetAllTweetsQueryHandler : IQueryHandler<GetAllTweetsQuery, Pageabl
             .Include(t => t.Attachments)
             .Include(t => t.Reactions)
             .Include(t => t.Retweets)
-            .Include(t => t.Comments);
+            .Include(t => t.Comments)
+            .OrderByDescending(c => c.CreatedOnUtc);
 
         int totalCount = await tweetsQuery.CountAsync();
 
@@ -48,6 +49,7 @@ public class GetAllTweetsQueryHandler : IQueryHandler<GetAllTweetsQuery, Pageabl
 
         List<BasicTweetInfoDto> tweetDtos = _mapper.Map<List<BasicTweetInfoDto>>(tweets);
 
+        //Retorna objeto con la lista de Dtos y el total de Tweets
         return new Pageable<BasicTweetInfoDto>
         {
             List = tweetDtos,

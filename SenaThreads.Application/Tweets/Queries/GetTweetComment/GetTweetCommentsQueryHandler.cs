@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Tweets;
 using SenaThreads.Application.IRepositories;
@@ -7,7 +8,7 @@ using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
 
 namespace SenaThreads.Application.Tweets.Queries.GetTweetComment;
-public class GetTweetCommentsQueryHandler : IQueryHandler<GetTweetCommentsQuery, List<CommentDto>>
+public class GetTweetCommentsQueryHandler : IQueryHandler<GetTweetCommentsQuery, Pageable<CommentDto>>
 {
     private readonly ICommentRepository _commentRepository;
     private readonly IMapper _mapper;
@@ -19,14 +20,38 @@ public class GetTweetCommentsQueryHandler : IQueryHandler<GetTweetCommentsQuery,
         _commentRepository = commentRepository;
     }
 
-    public async Task<Result<List<CommentDto>>> Handle(GetTweetCommentsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Pageable<CommentDto>>> Handle(GetTweetCommentsQuery request, CancellationToken cancellationToken)
     {
-        //Obtener todos los comentarios del tweet especificado
-        List<Comment> coments = await _commentRepository.GetCommentsByTweetIdAsync(request.TweetId);
+        var paginatedComments = await FetchData(request.TweetId, request.Page, request.PageSize);
+        return Result.Success(paginatedComments);
+    }
 
-        //Mapear los comentarios a Dtos
-        List<CommentDto> comenDtos = _mapper.Map<List<CommentDto>>(coments);
+    private async Task<Pageable<CommentDto>> FetchData(Guid tweetId, int page, int pageSize)
+    {
+        int start = pageSize * (page - 1);
 
-        return Result.Success(comenDtos);
+        IQueryable<Comment> commentsQuery = _commentRepository.Queryable()
+            .Where(c => c.TweetId == tweetId) 
+            .Include(c => c.User)             
+            .Include(c => c.Text)             
+            .OrderByDescending(c => c.CreatedOnUtc); // Ordenar los comentarios por fecha de creación
+
+        int totalCount = await commentsQuery.CountAsync();//total de comentarios
+
+        List<Comment> pagedComments = await commentsQuery
+            .Skip(start)        
+            .Take(pageSize)     
+            .ToListAsync();     
+
+        // Mapear los comentarios paginados a DTOs
+        List<CommentDto> commentDtos = _mapper.Map<List<CommentDto>>(pagedComments);
+
+        // Retornar nuevo Objeto pageable con la lista de Dtos y el total de comentarios
+        return new Pageable<CommentDto>
+        {
+            List = commentDtos,
+            Count = totalCount
+        };
     }
 }
+

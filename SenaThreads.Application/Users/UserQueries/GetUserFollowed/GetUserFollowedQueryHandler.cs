@@ -46,7 +46,7 @@ public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, P
         //Mapeo al Dto
         List<FollowerDto> followerDtos = _mapper.Map<List<FollowerDto>>(followers);
 
-        //Objeto pageable con la lista paginada y el total de S
+        //Objeto pageable con la lista de Dtos y el total de Seguidores
         return new Pageable<FollowerDto>
         {
             List = followerDtos,

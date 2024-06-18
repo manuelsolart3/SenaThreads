@@ -1,5 +1,6 @@
 ﻿using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Events;
+using SenaThreads.Domain.Abstractions;
 
 namespace SenaThreads.Application.Events.Querie.GetAllEvents;
-public record GetAllEventsQuery : IQuery<List<EventDto>>;
+public record GetAllEventsQuery(int Page, int PageSize) : IQuery<Pageable<EventDto>>;
