@@ -18,5 +18,7 @@ public class Retweet : Entity
         TweetId = tweetId;
         RetweetedById = retweetedById;
         Comment = comment;
+        CreatedBy = RetweetedById;
+        UpdatedBy = RetweetedById;
     }
 }

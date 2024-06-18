@@ -21,7 +21,7 @@ public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, P
     {
         var paginatedFollowers = await FetchData(request.UserId, request.Page, request.PageSize);
 
-        return Result.Success(paginatedFollowers);
+        return Result.Success(paginatedFollowers);  
     }
 
     //Método para aplicar la consulta y paginacion

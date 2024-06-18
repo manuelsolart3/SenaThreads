@@ -6,4 +6,4 @@ namespace SenaThreads.Application.Tweets.Commands.PostTweet;
 public record PostTweetCommand(
     string UserId,
     string Text,
-    IEnumerable<IFormFile> Attachments) : ICommand;
+    IEnumerable<IFormFile>? Attachments = null) : ICommand;

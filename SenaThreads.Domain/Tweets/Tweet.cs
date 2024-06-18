@@ -30,5 +30,7 @@ public class Tweet : Entity
         UserId = userId;
         Text = text;
         Attachments = attachments;
+        CreatedBy = UserId;
+        UpdatedBy = UserId;
     }
 }

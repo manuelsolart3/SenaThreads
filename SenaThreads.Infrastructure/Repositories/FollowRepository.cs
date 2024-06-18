@@ -10,15 +10,6 @@ public class FollowRepository : Repository<Follow>, IFollowRepository
     {
     }
 
-    public async Task<List<User>> GetFollowersInfoAsyn(string userId)
-    {
-        return await  _dbSet
-            .Where(f => f.FollowedByUserId == userId)
-            .Include(u => u.FollowerUser) //Incluir la info del usuario
-            .Select(f => f.FollowerUser) //Solo los usuarios seguidores
-            .ToListAsync();
-
-    }
 
     public async Task<bool> IsFollowing(string followerUserId, string followedUserId)
     {

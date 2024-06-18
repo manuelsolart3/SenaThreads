@@ -18,7 +18,7 @@ public class User : IdentityUser
 
     //Propiedades de navegacion 
     public virtual ICollection<UserBlock> BlockedUsers { get; set; } //Usuario bloqueados por este usuario
-    public virtual ICollection<UserBlock> BlockeByUsers { get; set; } //Usuario que han bloqueado este usuario
+    public virtual ICollection<UserBlock> BlockeByUsers { get; set; } //Usuario que ha bloqueado este usuario
     public virtual ICollection<Follow> Followers { get; set; } // Usuarios que siguen a este usuario
     public virtual ICollection<Follow> Followees { get; set; } // Usuarios que sigue este usuario
 

@@ -11,7 +11,9 @@ public class ReactionConfiguration : IEntityTypeConfiguration<Reaction>
         builder.ToTable(nameof(Reaction));
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Type).HasConversion<int>().IsRequired(true);
-        builder.HasOne(x => x.Tweet).WithMany(y => y.Reactions).HasForeignKey(x => x.TweetId);
-        builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
+
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId);
     }
 }

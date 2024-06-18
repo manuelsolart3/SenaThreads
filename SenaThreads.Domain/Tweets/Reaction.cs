@@ -13,11 +13,13 @@ public class Reaction : Entity
 
     public ReactionType Type { get; set; }
 
-    public Reaction (Guid tweetId, string userId, ReactionType type)
+    public Reaction(Guid tweetId, string userId, ReactionType type)
     {
         Id = Guid.NewGuid();
         TweetId = tweetId;
         UserId = userId;
         Type = type;
+        CreatedBy = UserId;
+        UpdatedBy = UserId;
     }
 }
