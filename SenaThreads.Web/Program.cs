@@ -6,19 +6,18 @@ using SenaThreads.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
-
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
-//Añadimos servicios de de Identity
+//Aï¿½adimos servicios de Identity
 builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-// Registro del servicio de protección de datos
+// Registro del servicio de protecciï¿½n de datos
 builder.Services.AddDataProtection();
 
 var app = builder.Build();
