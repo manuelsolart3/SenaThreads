@@ -9,13 +9,16 @@ public class ReactToTweetCommandHandler : ICommandHandler<ReactToTweetCommand>
 {
     private readonly ITweetRepository _tweetRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IReactionRepository _reactionRepository;
 
     public ReactToTweetCommandHandler(
         ITweetRepository tweetRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IReactionRepository reactionRepository)
     {
         _tweetRepository = tweetRepository;
         _unitOfWork = unitOfWork;
+        _reactionRepository = reactionRepository;
     }
 
     public async Task<Result> Handle(ReactToTweetCommand request, CancellationToken cancellationToken)
@@ -43,10 +46,15 @@ public class ReactToTweetCommandHandler : ICommandHandler<ReactToTweetCommand>
         else
         {
             //lo agregamos a la  coleccion de reacciones en el Tweet
-            tweet.Reactions.Add(new Reaction( // Agregamos una nueva instancia de reaction con los parametros del command 
+            var newReaction = new Reaction( // Agregamos una nueva instancia de reaction con los parametros del command 
                 request.TweetId,
                 request.UserId,
-                request.Type));
+                request.Type);
+            // Agregar la nueva reacción al repositorio de reacciones
+            _reactionRepository.Add(newReaction);
+
+            // Agregar la reacción a la colección de reacciones del tweet
+            tweet.Reactions.Add(newReaction);
         }
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);

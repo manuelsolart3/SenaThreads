@@ -32,13 +32,13 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapGet("/", async context =>
-    {
-        await context.Response.WriteAsync("HOLAAA!!!");
-    });
-});
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapGet("/", async context =>
+//    {
+//        await context.Response.WriteAsync("HOLAAA!!!");
+//    });
+//});
 
 app.Run();
 

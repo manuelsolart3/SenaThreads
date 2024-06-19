@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Tweets;
 using SenaThreads.Application.IRepositories;
@@ -6,7 +7,7 @@ using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
 
 namespace SenaThreads.Application.Tweets.Queries.GetUserRetweets;
-public class GetUserRetweetsQueryHandler : IQueryHandler<GetUserRetweetsQuery, List<BasicTweetInfoDto>>
+public class GetUserRetweetsQueryHandler : IQueryHandler<GetUserRetweetsQuery, Pageable<BasicTweetInfoDto>>
 {
     private readonly ITweetRepository _tweetRepository;
     private readonly IMapper _mapper;
@@ -16,13 +17,37 @@ public class GetUserRetweetsQueryHandler : IQueryHandler<GetUserRetweetsQuery, L
         _mapper = mapper;
     }
 
-    public async Task<Result<List<BasicTweetInfoDto>>> Handle(GetUserRetweetsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<Pageable<BasicTweetInfoDto>>> Handle(GetUserRetweetsQuery request, CancellationToken cancellationToken)
     {
-        //Obtener los retweets del usuario especifico usando la condicion en true
-        List<Tweet> retweets = await _tweetRepository.GetAllTweetsAsync(request.UserId, retweetsOnly: true);
+        var paginatedRetweets = await FetchData(request.UserId, request.Page, request.PageSize);
+        return Result.Success(paginatedRetweets);
+    }
 
-        List<BasicTweetInfoDto> retweetsDto = _mapper.Map<List<BasicTweetInfoDto>>(retweets);
+    private async Task<Pageable<BasicTweetInfoDto>> FetchData(string userId, int page, int pageSize)
+    {
+        int start = pageSize * (page - 1);
 
-        return Result.Success(retweetsDto);
+        IQueryable<Tweet> tweetsQuery = _tweetRepository.Queryable()
+            .Include(t => t.User) // Incluir información del usuario creador del tweet
+            .Include(t => t.Attachments) // Incluir adjuntos del tweet
+            .Include(t => t.Reactions) // Incluir reacciones del tweet
+            .Include(t => t.Comments) // Incluir comentarios del tweet
+            .Where(t => t.Retweets.Any(r => r.RetweetedById == userId)) // Filtrar por retweets del usuario
+            .OrderByDescending(t => t.CreatedOnUtc); // Ordenar por fecha de creación descendente
+
+        int totalCount = await tweetsQuery.CountAsync();
+
+        List<Tweet> pagedRetweets = await tweetsQuery
+            .Skip(start)
+            .Take(pageSize)
+            .ToListAsync();
+
+        List<BasicTweetInfoDto> retweetDtos = _mapper.Map<List<BasicTweetInfoDto>>(pagedRetweets);
+
+        return new Pageable<BasicTweetInfoDto>
+        {
+            List = retweetDtos,
+            Count = totalCount
+        };
     }
 }

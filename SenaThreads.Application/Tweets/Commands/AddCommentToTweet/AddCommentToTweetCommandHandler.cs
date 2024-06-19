@@ -12,19 +12,24 @@ using SenaThreads.Domain.Users;
 namespace SenaThreads.Application.Tweets.Commands.AddCommentToTweet;
 public class AddCommentToTweetCommandHandler : ICommandHandler<AddCommentToTweetCommand>
 {
-    private readonly ITweetRepository _tweetRepository;
+   private readonly ICommentRepository _commentRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
+    private readonly ITweetRepository _tweetRepository;
 
 
     public AddCommentToTweetCommandHandler(
-        ITweetRepository tweetRepository,
+
         IUnitOfWork unitOfWork,
-        UserManager<User> userManager)
+        UserManager<User> userManager,
+        ICommentRepository commentRepository,
+        ITweetRepository tweetRepository)
     {
-        _tweetRepository = tweetRepository;
+
         _unitOfWork = unitOfWork;
         _userManager = userManager;
+        _commentRepository = commentRepository;
+        _tweetRepository = tweetRepository;
     }
 
     public async Task<Result> Handle(AddCommentToTweetCommand request, CancellationToken cancellationToken)
@@ -44,14 +49,17 @@ public class AddCommentToTweetCommandHandler : ICommandHandler<AddCommentToTweet
         }
 
         // Crear el comentario
-        Comment newComment = new Comment(
+        var comment = new Comment(
             request.TweetId,
             request.UserId,
             request.Text
         );
 
-        // Agregar el comentario al tweet
-        tweet.Comments.Add(newComment);
+        // Agregar el nuevo comentario al repositorio de comentarios
+        _commentRepository.Add( comment );
+
+        // Agregar el comentario a la colección de comentarios del tweet 
+        tweet.Comments.Add(comment);
 
         // Guardar los cambios en la base de datos
         await _unitOfWork.SaveChangesAsync(cancellationToken);
