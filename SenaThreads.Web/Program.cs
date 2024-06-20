@@ -1,6 +1,7 @@
 
 using System.Configuration;
 using System.Text;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -75,13 +76,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-//app.UseEndpoints(endpoints =>
-//{
-//    endpoints.MapGet("/", async context =>
-//    {
-//        await context.Response.WriteAsync("HOLAAA!!!");
-//    });
-//});
-
+Env.Load();
 
 app.Run();

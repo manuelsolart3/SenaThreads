@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SenaThreads.Application.IRepositories;
@@ -10,7 +11,7 @@ public static class DependencyInjection
 { 
    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("Database") ??
+        var connectionString = Env.GetString("ConnectionString") ??
                                          throw new ArgumentNullException(nameof(configuration));
 
         //DbContext y cc de conexion
