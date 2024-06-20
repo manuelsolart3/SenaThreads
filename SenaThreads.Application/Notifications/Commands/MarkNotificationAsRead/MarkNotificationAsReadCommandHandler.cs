@@ -19,10 +19,18 @@ public class MarkNotificationAsReadCommandHandler : ICommandHandler<MarkNotifica
     {
         //Obtener la notificacion del reposiotrio
         Notification notification = await _notificationRepository.GetByIdAsync(request.NotificationId);
-        if (notification == null)
+
+        if (notification is null)
         {
             return Result.Failure(NotificationError.NotificationNotFound);//No se encontro la notificaion
         }
+
+        // Validar si el usuario tiene permiso para marcar la notificación como leída
+        if (notification.UserId != request.UserId)
+        {
+            return Result.Failure(NotificationError.Unauthorized); // Usuario no autorizado para marcar la notificación
+        }
+
         //Validar si la notificacion ya fue leida
         if (notification.IsRead)
         {
@@ -31,6 +39,7 @@ public class MarkNotificationAsReadCommandHandler : ICommandHandler<MarkNotifica
 
         //Marcamos la notificacion como leida
         notification.IsRead = true; 
+
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();

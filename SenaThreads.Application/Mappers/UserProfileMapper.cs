@@ -9,6 +9,8 @@ public class UserProfileMapper : Profile
     {
         CreateMap<User, UserProfileDto>();
         CreateMap<User, UserRegistrationInfoDto>();
+        CreateMap<User, UserDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(source => source.Id));
     }
 
 }

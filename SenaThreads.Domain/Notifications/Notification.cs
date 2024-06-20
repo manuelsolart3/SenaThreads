@@ -18,5 +18,7 @@ public class Notification : Entity
         UserId = userId;
         Type = type;
         Path = path;
+        CreatedBy = "system";
+        UpdatedBy = "system";
     }
 }

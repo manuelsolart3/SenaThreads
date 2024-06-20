@@ -38,12 +38,13 @@ public sealed class AppDbContext : IdentityDbContext<User>, IUnitOfWork
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
         //Excluir las entidades de Identity no necesarias
-        builder.Ignore<IdentityRole>();
+        //builder.Ignore<IdentityUserClaim<string>>();
+        //builder.Ignore<IdentityUserLogin<string>>();
+        //builder.Ignore<IdentityUserToken<string>>();
+
         builder.Ignore<IdentityUserRole<string>>();
-        builder.Ignore<IdentityUserClaim<string>>();
-        builder.Ignore<IdentityUserLogin<string>>();
+        builder.Ignore<IdentityRole>();
         builder.Ignore<IdentityRoleClaim<string>>();
-        builder.Ignore<IdentityUserToken<string>>();
 
 
     }

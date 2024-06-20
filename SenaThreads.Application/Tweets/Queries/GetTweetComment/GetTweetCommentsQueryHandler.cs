@@ -32,8 +32,7 @@ public class GetTweetCommentsQueryHandler : IQueryHandler<GetTweetCommentsQuery,
 
         IQueryable<Comment> commentsQuery = _commentRepository.Queryable()
             .Where(c => c.TweetId == tweetId) 
-            .Include(c => c.User)             
-            .Include(c => c.Text)             
+            .Include(c => c.User)                     
             .OrderByDescending(c => c.CreatedOnUtc); // Ordenar los comentarios por fecha de creación
 
         int totalCount = await commentsQuery.CountAsync();//total de comentarios

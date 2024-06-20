@@ -1,6 +1,11 @@
 
+using System.Configuration;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using SenaThreads.Application;
+using SenaThreads.Application.Authentication;
 using SenaThreads.Domain.Users;
 using SenaThreads.Infrastructure;
 
@@ -9,13 +14,48 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+
+// Configuración de autenticación JWT
+var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+
+
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
-//A�adimos servicios de Identity
+// Configuración de servicios de Identity
 builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+
+
+
+//Obtener la key de la configuracion y convertila en arreglo de byte
+var key = Encoding.ASCII.GetBytes(jwtSettings.Key);
+
+
+//Servicios de auth
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options => //Configurar la auth de Jwt Bearer
+{
+    options.SaveToken = true; //guardar el token
+    options.TokenValidationParameters = new TokenValidationParameters //parametros de validacion
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        //ValidIssuer = jwtSettings.Issuer,
+        ValidateAudience = false,
+        //ValidAudience = jwtSettings.Audience,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+
 
 // Registro del servicio de protecci�n de datos
 builder.Services.AddDataProtection();
@@ -30,6 +70,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 //app.UseEndpoints(endpoints =>
@@ -40,15 +83,5 @@ app.MapControllers();
 //    });
 //});
 
+
 app.Run();
-
-//confi para el appsettings
-//builder.Configuration
-//    .SetBasePath(Directory.GetCurrentDirectory())
-//    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-//    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
-//    .AddEnvironmentVariables();
-
-//Instalamos paquete entityframworkcore inmemory sirve para utilizar una Bd en memoria temporal
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseInMemoryDatabase("InMemoryDatabase"));

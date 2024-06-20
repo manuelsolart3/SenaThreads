@@ -22,4 +22,8 @@ public static class UserError
     public static readonly Error AlreadyExists = new(
         "User.AlreadyExists",
         "This action already exist");
+
+    public static readonly Error RegistrationFailed = new(
+        "User.RegistrationFailed",
+        "Failed to register use");
 }

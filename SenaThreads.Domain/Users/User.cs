@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using SenaThreads.Domain.Abstractions;
 
 namespace SenaThreads.Domain.Users;
 

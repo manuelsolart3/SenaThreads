@@ -50,3 +50,5 @@ public class Result<TValue> : Result
 
     public static implicit operator Result<TValue>(TValue? value) => Create(value);
 }
+
+

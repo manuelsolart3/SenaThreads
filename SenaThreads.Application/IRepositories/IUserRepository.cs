@@ -2,7 +2,6 @@
 using SenaThreads.Domain.Users;
 
 namespace SenaThreads.Application.IRepositories;
-public interface IUserRepository 
+public interface IUserRepository
 {
-    Task<User> GetUserByIdAsync(string userId);
 }

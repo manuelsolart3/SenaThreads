@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SenaThreads.Application.Users.Commands.BlockUser;
 using SenaThreads.Application.Users.Commands.FollowUser;
@@ -11,6 +12,7 @@ using SenaThreads.Application.Users.UserQueries.GetUserFollowed;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowers;
 using SenaThreads.Application.Users.UserQueries.GetUserProfile;
 using SenaThreads.Application.Users.UserQueries.GetUserRegistrationInfo;
+using SenaThreads.Application.Users.UserQueries.SearchUsersByUsername;
 
 namespace SenaThreads.Web.Controllers;
 
@@ -27,6 +29,7 @@ public class UserController : ControllerBase
 
     //REGISTAR USUARIO
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register(RegisterUserCommand command)
     {
         var result = await _mediator.Send(command);
@@ -49,13 +52,15 @@ public class UserController : ControllerBase
 
         if (result.IsSuccess)
         {
-            return Ok("User Login succesfuly");
+            return Ok(result.Value);
         }
         else
         {
             return Unauthorized(result.Error);
         }
     }
+
+
 
     //ACTUALIZAR INFO DE PERFIL
     [HttpPut("update-profile")]
@@ -171,6 +176,7 @@ public class UserController : ControllerBase
 
     //OBTENER LISTA DE SEGUIDORES
     [HttpGet("{userId}/followers")]
+    [Authorize]
     public async Task<IActionResult> GetUserFollowers (string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         var query = new GetUserFollowersQuery (userId, page, pageSize);
@@ -202,5 +208,20 @@ public class UserController : ControllerBase
             return NotFound(result.Error);
         }
     }
+
+    //BUSCAR USUARIO POR SU USERNAME
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchUsersByUsername([FromQuery] SearchUsersByUsernameQuery query, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
+
 
 }

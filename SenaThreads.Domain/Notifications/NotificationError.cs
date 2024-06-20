@@ -12,4 +12,10 @@ public static class NotificationError
         "Notification.AlreadyRead",
         "The notification has already been marked as read"
     );
+
+
+    public static readonly Error Unauthorized = new(
+        "Notification.Unauthorized",
+        "user not authorize to mark notification");
+
 }

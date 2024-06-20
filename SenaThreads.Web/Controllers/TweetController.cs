@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SenaThreads.Application.Tweets.Commands.AddCommentToTweet;
 using SenaThreads.Application.Tweets.Commands.DeleteTweet;
 using SenaThreads.Application.Tweets.Commands.PostTweet;
@@ -8,6 +7,7 @@ using SenaThreads.Application.Tweets.Commands.ReactToTweet;
 using SenaThreads.Application.Tweets.Commands.Retweet;
 using SenaThreads.Application.Tweets.Queries.GetAllTweets;
 using SenaThreads.Application.Tweets.Queries.GetTweetComments;
+using SenaThreads.Application.Tweets.Queries.GetUserMediaTweets;
 using SenaThreads.Application.Tweets.Queries.GetUserRetweets;
 using SenaThreads.Application.Tweets.Queries.GetUserTweets;
 
@@ -19,12 +19,11 @@ namespace SenaThreads.Web.Controllers;
 public class TweetController : ControllerBase //proporciona funcionalidades
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<TweetController> _logger;
+    
 
-    public TweetController(IMediator mediator, ILogger<TweetController> logger)
+    public TweetController(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     //CREAR TWEET
@@ -80,17 +79,14 @@ public class TweetController : ControllerBase //proporciona funcionalidades
     [HttpPost("retweet")]
     public async Task<IActionResult> Retweet([FromBody] RetweetCommand command)
     {
-        _logger.LogInformation("Received RetweetCommand for TweetId: {TweetId} by UserId: {UserId}", command.TweetId, command.RetweetedById);
         var result = await _mediator.Send(command);
 
         if (result.IsSuccess)
-        {
-            _logger.LogInformation("Retweet successful for TweetId: {TweetId}", command.TweetId);
+        {          
             return Ok("Tweet retweeted successfully");
         }
         else
         {
-            _logger.LogWarning("Failed to retweet TweetId: {TweetId}, Error: {Error}", command.TweetId, result.Error);
             return BadRequest(result.Error);
         }
     }
@@ -139,9 +135,9 @@ public class TweetController : ControllerBase //proporciona funcionalidades
         return BadRequest(result.Error);
     }
 
-    //OBTENER TODOS LOS COMENTARIOS DE UN TWEET
-    [HttpGet("comments")]
-    public async Task<IActionResult> GetTweetComments([FromQuery] GetTweetCommentsQuery query, CancellationToken cancellationToken)
+    //OBTENER TWEETSMEDIA DE UN USUARIO
+    [HttpGet("media")]
+    public async Task<IActionResult> GetUserMediatweets([FromQuery] GetUserMediaTweetsQuery query, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(query, cancellationToken);
 
@@ -166,4 +162,21 @@ public class TweetController : ControllerBase //proporciona funcionalidades
 
         return BadRequest(result.Error);
     }
+
+    //OBTENER TODOS LOS COMENTARIOS DE UN TWEET
+    [HttpGet("comments")]
+    public async Task<IActionResult> GetTweetComments([FromQuery] GetTweetCommentsQuery query, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
+
+
+
 }
