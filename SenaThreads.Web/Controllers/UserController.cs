@@ -64,6 +64,7 @@ public class UserController : ControllerBase
 
     //ACTUALIZAR INFO DE PERFIL
     [HttpPut("update-profile")]
+    [Authorize]
     public async Task<IActionResult> UpdateProfile([FromBody] UpadateProfileCommand command)
     {
         var result = await _mediator.Send(command);
@@ -79,6 +80,7 @@ public class UserController : ControllerBase
 
     //SEGUIR A UN USUARIO
     [HttpPost("follow")]
+    [Authorize]
     public async Task<IActionResult> FollowUser([FromBody] FollowUserCommand command)
     {
         var result = await _mediator.Send(command);
@@ -95,6 +97,7 @@ public class UserController : ControllerBase
 
     //DEJAR DE SEGUIR A UN USUARIO
     [HttpPost("unfollow")]
+    [Authorize]
     public async Task<IActionResult> UnFollowUser([FromBody] UnfollowUserCommand command)
     {
         var result = await _mediator.Send(command);
@@ -110,6 +113,7 @@ public class UserController : ControllerBase
 
     //BLOQUEAR A UN USUARIO
     [HttpPost("block")]
+    [Authorize]
     public async Task<IActionResult> BlockUser([FromBody] BlockUserCommand command)
     {
         var result = await _mediator.Send(command);
@@ -126,6 +130,7 @@ public class UserController : ControllerBase
 
     //DESBLOQUEAR A UN USUARIO
     [HttpPost("unblock")]
+    [Authorize]
     public async Task<IActionResult> UnBlockUser([FromBody] UnBlockUserCommand command)
     {
         var result = await _mediator.Send(command);
@@ -142,6 +147,7 @@ public class UserController : ControllerBase
 
     //OBTENER INFO DE PERFIL
     [HttpGet("{userId}/profile")]
+    [Authorize]
     public async Task<IActionResult> GetUserProfile(string userId)
     {
         var query = new GetUserProfileQuery(userId);
@@ -159,6 +165,7 @@ public class UserController : ControllerBase
 
     //OBTENER INFO DEl REGISTRO DENTRO DE "EDITAR PERFIL"
     [HttpGet("{userId}/Register-Info")]
+    [Authorize]
     public async Task<IActionResult> GetUserRegistrationInfo(string userId)
     {
         var query = new GetUserRegistrationInfoQuery(userId);
@@ -194,6 +201,7 @@ public class UserController : ControllerBase
 
     //OBTENER LISTA DE SEGUIDOS
     [HttpGet("{userId}/followed")]
+    [Authorize]
     public async Task<IActionResult> GetUserFollowed(string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         var query = new GetUserFollowedQuery(userId, page, pageSize);
@@ -211,6 +219,7 @@ public class UserController : ControllerBase
 
     //BUSCAR USUARIO POR SU USERNAME
     [HttpGet("search")]
+    [Authorize]
     public async Task<IActionResult> SearchUsersByUsername([FromQuery] SearchUsersByUsernameQuery query, CancellationToken cancellationToken)
     {
         var result = await _mediator.Send(query, cancellationToken);
