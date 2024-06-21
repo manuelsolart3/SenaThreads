@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using DotNetEnv;
+﻿using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,17 +8,20 @@ using SenaThreads.Infrastructure.Repositories;
 
 namespace SenaThreads.Infrastructure;
 public static class DependencyInjection
-{ 
-   public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+{
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         string connectionString = null;
         var profile = configuration.GetValue<string>("Profile") ?? 
                       throw new ArgumentNullException(nameof(configuration));
         
+        Console.WriteLine(profile);
+        
         if (profile.Equals("prod"))
         {
+            Console.WriteLine(Env.GetString("ConnectionString"));
             connectionString = Env.GetString("ConnectionString") ??
-                               throw new ArgumentNullException(nameof(configuration));    
+                               throw new ArgumentNullException(nameof(configuration));
         }
         else if (profile.Equals("local"))
         {

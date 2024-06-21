@@ -12,6 +12,8 @@ using SenaThreads.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Env.Load();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
@@ -75,7 +77,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-Env.Load();
 
 app.Run();
