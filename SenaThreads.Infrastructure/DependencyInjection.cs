@@ -1,4 +1,5 @@
-﻿using DotNetEnv;
+﻿using System.Configuration;
+using DotNetEnv;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,9 +12,25 @@ public static class DependencyInjection
 { 
    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = Env.GetString("ConnectionString") ??
-                                         throw new ArgumentNullException(nameof(configuration));
-
+        string connectionString = null;
+        var profile = configuration.GetValue<string>("Profile") ?? 
+                      throw new ArgumentNullException(nameof(configuration));
+        
+        if (profile.Equals("prod"))
+        {
+            connectionString = Env.GetString("ConnectionString") ??
+                               throw new ArgumentNullException(nameof(configuration));    
+        }
+        else if (profile.Equals("local"))
+        {
+            connectionString = configuration.GetSection("ConnectionStrings").GetValue<string>("Database") ??
+                               throw new ArgumentNullException(nameof(configuration));   
+        }
+        else
+        {
+            throw new ArgumentNullException(nameof(configuration)); 
+        }
+        
         //DbContext y cc de conexion
         services.AddDbContext<AppDbContext>(options =>
         {
