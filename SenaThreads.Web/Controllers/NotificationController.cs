@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SenaThreads.Application.Notifications.Commands.MarkNotificationAsRead;
 using SenaThreads.Application.Notifications.Commands.SendNotification;
@@ -8,6 +9,7 @@ namespace SenaThreads.Web.Controllers;
 
 [Route("api/notifications")]
 [ApiController]
+[Authorize]
 public class NotificationController : ControllerBase
 {
     private readonly IMediator _mediator;

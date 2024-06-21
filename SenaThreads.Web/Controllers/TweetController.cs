@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SenaThreads.Application.Tweets.Commands.AddCommentToTweet;
 using SenaThreads.Application.Tweets.Commands.DeleteTweet;
@@ -14,8 +15,8 @@ using SenaThreads.Application.Tweets.Queries.GetUserTweets;
 namespace SenaThreads.Web.Controllers;
 
 [Route("api/tweets")] 
-[ApiController] 
-
+[ApiController]
+[Authorize]
 public class TweetController : ControllerBase //proporciona funcionalidades
 {
     private readonly IMediator _mediator;

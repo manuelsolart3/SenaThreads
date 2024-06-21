@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SenaThreads.Application.Dtos.Events;
 using SenaThreads.Application.Events.Commands.CreateEvent;
@@ -10,6 +11,7 @@ namespace SenaThreads.Web.Controllers;
 
 [ApiController]
 [Route("api/events")]
+[Authorize]
 public class EventController : ControllerBase
 {
     private readonly IMediator _mediator;
