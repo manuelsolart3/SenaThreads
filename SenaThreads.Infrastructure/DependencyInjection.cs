@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
+using SenaThreads.Infrastructure.ExternalServices;
 using SenaThreads.Infrastructure.Repositories;
 
 namespace SenaThreads.Infrastructure;
@@ -38,6 +40,9 @@ public static class DependencyInjection
         {
             options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
+        
+        // External Services
+        services.AddScoped<IAwsS3Service, AwsS3Service>();
 
         //reposiotrios
         services.AddScoped<IUserRepository, UserRepository>();
