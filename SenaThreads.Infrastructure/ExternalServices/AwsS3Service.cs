@@ -51,7 +51,7 @@ public class AwsS3Service : IAwsS3Service
         return key;
     }
     
-    public async Task<MemoryStream> GetFileFromS3Async2(string key)
+    public async Task<MemoryStream> GetFileFromS3Async(string key)
     {
         try
         {
