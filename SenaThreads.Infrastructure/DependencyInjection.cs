@@ -17,11 +17,8 @@ public static class DependencyInjection
         var profile = configuration.GetValue<string>("Profile") ?? 
                       throw new ArgumentNullException(nameof(configuration));
         
-        Console.WriteLine(profile);
-        
         if (profile.Equals("prod"))
         {
-            Console.WriteLine(Env.GetString("ConnectionString"));
             connectionString = Env.GetString("ConnectionString") ??
                                throw new ArgumentNullException(nameof(configuration));
         }
