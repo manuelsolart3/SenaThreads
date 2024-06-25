@@ -13,5 +13,8 @@ public class TweetAttachment : Entity
     {
         Id = Guid.NewGuid();
         Key = key;
+        CreatedBy = "asd";
+        UpdatedBy = "asd";
+
     }
 }

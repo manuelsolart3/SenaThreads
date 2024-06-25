@@ -29,7 +29,7 @@ public class TweetController : ControllerBase //proporciona funcionalidades
 
     //CREAR TWEET
     [HttpPost("post")]
-    public async Task<IActionResult> PostTweet([FromBody] PostTweetCommand command)
+    public async Task<IActionResult> PostTweet([FromForm] PostTweetCommand command)
     {
         var result = await _mediator.Send(command);
 

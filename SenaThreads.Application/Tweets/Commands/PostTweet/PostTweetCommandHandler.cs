@@ -23,23 +23,28 @@ public class PostTweetCommandHandler : ICommandHandler<PostTweetCommand>
 
     public async Task<Result> Handle(PostTweetCommand request, CancellationToken cancellationToken)
     {
-        List<TweetAttachment> tweetAttachments = new();
+        List<TweetAttachment> tweetAttachments = new List<TweetAttachment>();
 
-        Tweet newTweet = new(
+        // Crear el nuevo tweet
+        Tweet newTweet = new Tweet(
             request.UserId,
             request.Text,
             tweetAttachments);
-        
+
+       
         await UploadAttachments(request, newTweet, tweetAttachments);
 
+        // Agregar los adjuntos al tweet
         newTweet.Attachments = tweetAttachments;
 
+        // Agregar el tweet al repositorio
         _tweetRepository.Add(newTweet);
+
+        // Guardar cambios en la base de datos
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
     }
-
     private async Task UploadAttachments(PostTweetCommand request, Tweet newTweet, List<TweetAttachment> tweetAttachments)
     {
         // TODO: Lógica para la creación de los 'attachments' del tweet y guardarlos en un bucket de S3 de AWS
@@ -49,8 +54,12 @@ public class PostTweetCommandHandler : ICommandHandler<PostTweetCommand>
             {
                 var key = await _awsS3Service.UploadFileToS3Async(attachment);
                 
-                var tweetAttachment = new TweetAttachment(key);
-                
+                var tweetAttachment = new TweetAttachment(key)
+                {
+                    CreatedBy = newTweet.CreatedBy,
+                    UpdatedBy = newTweet.UpdatedBy 
+                };
+
                 tweetAttachments.Add(tweetAttachment);
             }
         }

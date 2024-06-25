@@ -8,6 +8,7 @@ using SenaThreads.Application.Users.Commands.RegisterUser;
 using SenaThreads.Application.Users.Commands.UnBlockUser;
 using SenaThreads.Application.Users.Commands.UnFollowUser;
 using SenaThreads.Application.Users.Commands.UpdateProfile;
+using SenaThreads.Application.Users.Commands.UploadProfilePicture;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowed;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowers;
 using SenaThreads.Application.Users.UserQueries.GetUserProfile;
@@ -71,6 +72,23 @@ public class UserController : ControllerBase
         if (result.IsSuccess)
         {
             return Ok("Profile Updated succesfully");
+        }
+        else
+        {
+            return BadRequest(result.Error);
+        }
+    }
+
+
+    //ACTUALIZAR O SUBIR IMAGEN DE PERFIL
+    [HttpPost("uploadPicture")]
+    [Authorize]
+    public async Task<IActionResult> UploadProfilePicture([FromForm] UploadProfilePictureCommand command)
+    {
+        var result = await _mediator.Send(command);
+        if (result.IsSuccess)
+        {
+            return Ok("Upload Profile picture succesfully");
         }
         else
         {
