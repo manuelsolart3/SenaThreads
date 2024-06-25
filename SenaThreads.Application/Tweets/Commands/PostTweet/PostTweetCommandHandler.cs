@@ -49,9 +49,7 @@ public class PostTweetCommandHandler : ICommandHandler<PostTweetCommand>
             {
                 var key = await _awsS3Service.UploadFileToS3Async(attachment);
                 
-                var tweetAttachment = new TweetAttachment(
-                    newTweet,
-                    key);
+                var tweetAttachment = new TweetAttachment(key);
                 
                 tweetAttachments.Add(tweetAttachment);
             }

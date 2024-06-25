@@ -9,10 +9,9 @@ public class TweetAttachment : Entity
     public Guid TweetId { get; private set; }
     public string Key { get; private set; }
 
-    public TweetAttachment(Tweet tweet, string key)
+    public TweetAttachment(string key)
     {
         Id = Guid.NewGuid();
-        Tweet = tweet;
         Key = key;
     }
 }
