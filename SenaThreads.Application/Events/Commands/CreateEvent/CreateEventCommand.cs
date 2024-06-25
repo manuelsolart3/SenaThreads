@@ -1,9 +1,10 @@
-﻿using SenaThreads.Application.Abstractions.Messaging;
+﻿using Microsoft.AspNetCore.Http;
+using SenaThreads.Application.Abstractions.Messaging;
 
 namespace SenaThreads.Application.Events.Commands.CreateEvent;
 public record CreateEventCommand(
     string UserId,
     string Title,
     string? Description,
-    string? Image,
+    IFormFile? Image,
     DateTime EventDate) : ICommand;

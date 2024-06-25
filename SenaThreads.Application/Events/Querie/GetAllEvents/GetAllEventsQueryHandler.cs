@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Events;
 using SenaThreads.Application.Dtos.Tweets;
+using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Events;
@@ -14,17 +15,30 @@ public class GetAllEventsQueryHandler : IQueryHandler<GetAllEventsQuery, Pageabl
 {
     private readonly IEventRepository _eventRepository;
     private readonly IMapper _mapper;
+    private readonly IAwsS3Service  _awsS3Service;
 
-    public GetAllEventsQueryHandler(IEventRepository eventRepository, IMapper mapper)
+    public GetAllEventsQueryHandler(
+        IEventRepository eventRepository
+        , IMapper mapper,
+        IAwsS3Service awsS3Service)
     {
         _eventRepository = eventRepository;
         _mapper = mapper;
+        _awsS3Service = awsS3Service;
     }
 
     public async Task<Result<Pageable<EventDto>>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
     {
-
         var paginatedEvent = await FetchData(request.Page, request.PageSize);
+
+        foreach (var eventDto in paginatedEvent.List)
+        {
+            if (!string.IsNullOrEmpty(eventDto.Image))
+            {
+                eventDto.Image = _awsS3Service.GeneratePresignedUrl(eventDto.Image);
+            }
+        }
+
         return Result.Success(paginatedEvent);
 
 

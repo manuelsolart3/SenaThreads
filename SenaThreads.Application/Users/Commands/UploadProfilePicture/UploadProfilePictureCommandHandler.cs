@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Reflection.Metadata.Ecma335;
+using Microsoft.AspNetCore.Identity;
 using SenaThreads.Application.Abstractions.Messaging;
+using SenaThreads.Application.ExternalServices;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
@@ -7,10 +9,12 @@ namespace SenaThreads.Application.Users.Commands.UploadProfilePicture;
 public class UploadProfilePictureCommandHandler : ICommandHandler<UploadProfilePictureCommand>
 {
     private readonly UserManager<User> _userManager;
+    private readonly IAwsS3Service _awsS3Service;
 
-    public UploadProfilePictureCommandHandler(UserManager<User> userManager)
+    public UploadProfilePictureCommandHandler(UserManager<User> userManager, IAwsS3Service awsS3Service)
     {
         _userManager = userManager;
+        _awsS3Service = awsS3Service;
     }
 
     public async Task<Result> Handle(UploadProfilePictureCommand request, CancellationToken cancellationToken)
@@ -22,10 +26,22 @@ public class UploadProfilePictureCommandHandler : ICommandHandler<UploadProfileP
         return Result.Failure(UserError.UserNotFound);
         }
 
-        //Actualizamos o subimos la imagen de perfil
-        user.ProfilePictureS3Key = request.ProfilePictureS3Key;
+        // Subir la imagen de perfil a AWS S3
+        string profilePictureKey = await _awsS3Service.UploadFileToS3Async(request.ProfilePictureS3Key);
+
+        //Actualizar o subir la imagen de perfil
+        user.ProfilePictureS3Key = profilePictureKey;
         
-        await _userManager.UpdateAsync(user);
-        return Result.Success();
+        //Guardar cambios en el usuario
+        var updatedResult = await _userManager.UpdateAsync(user);
+
+        if (updatedResult.Succeeded)
+        {
+            return Result.Success();
+        }
+        else
+        {
+            return Result.Failure(UserError.ErrorupdateResult);
+        }
     }
 }

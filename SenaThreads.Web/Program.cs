@@ -65,10 +65,44 @@ builder.Services.AddDataProtection();
 
 var app = builder.Build();
 
+// Configurar la política CORS para la URL local
+app.UseCors(policy =>
+{
+    policy.WithOrigins("http://localhost:5173")
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+});
+
+// Configurar la política CORS para la URL principal
+app.UseCors(policy =>
+{
+    policy.WithOrigins("https://test-sena-book.vercel.app")
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+});
+
+// Configurar la política CORS para la URL de staging
+app.UseCors(policy =>
+{
+    policy.WithOrigins("https://test-sena-book-git-stg-senathreads.vercel.app")
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+});
+
+// Configurar la política CORS para las ramas de desarrollo
+app.UseCors(policy =>
+{
+    policy.WithOrigins(
+        "https://test-sena-book-git-ft-2334-senathreads.vercel.app",
+        "https://test-sena-book-git-ft-2335-senathreads.vercel.app")
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+});
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    
+    app.UseHttpsRedirection();
 }
 
 app.UseHttpsRedirection();

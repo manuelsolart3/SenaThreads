@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Events;
+using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Events;
@@ -16,17 +17,30 @@ public class GetUserEventsQueryHandler : IQueryHandler<GetUserEventsQuery, Pagea
 {
     private readonly IEventRepository _eventRepository;
     private readonly IMapper _mapper;
+    private readonly IAwsS3Service _awsS3Service;
 
-    public GetUserEventsQueryHandler(IEventRepository eventRepository, IMapper mapper)
+    public GetUserEventsQueryHandler(
+        IEventRepository eventRepository,
+        IMapper mapper,
+        IAwsS3Service awsS3Service)
     {
         _eventRepository = eventRepository;
         _mapper = mapper;
+        _awsS3Service = awsS3Service;
     }
 
     public async Task<Result<Pageable<EventDto>>> Handle(GetUserEventsQuery request, CancellationToken cancellationToken)
     {
 
         var paginatedEvents = await FetchData(request.UserId, request.Page, request.PageSize);
+
+        foreach (var eventDto in paginatedEvents.List)
+        {
+            if (!string.IsNullOrEmpty(eventDto.Image))
+            {
+                eventDto.Image = _awsS3Service.GeneratePresignedUrl(eventDto.Image);
+            }
+        }
 
         return Result.Success(paginatedEvents);
     }

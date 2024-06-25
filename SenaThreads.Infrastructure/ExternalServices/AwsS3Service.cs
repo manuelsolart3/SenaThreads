@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -14,7 +15,7 @@ public class AwsS3Service : IAwsS3Service
     private readonly IAmazonS3 _s3Client;
     private readonly string _bucketName;
 
-    public AwsS3Service(IConfiguration configuration)
+    public AwsS3Service(/*IConfiguration configuration*/)
     {
         var _accessKeyId = Env.GetString("ACCESS_KEY_ID");
         var _secretAccessKey = Env.GetString("SECRET_ACCESS_KEY");
@@ -87,5 +88,16 @@ public class AwsS3Service : IAwsS3Service
         }
 
         return null;
+    }
+
+    public string GeneratePresignedUrl(string key, double durationInMinutes = 240)
+    {
+        var request = new GetPreSignedUrlRequest
+        {
+            BucketName = _bucketName,
+            Key = key,
+            Expires = DateTime.UtcNow.AddMinutes(durationInMinutes)
+        };
+        return _s3Client.GetPreSignedURL(request);
     }
 }

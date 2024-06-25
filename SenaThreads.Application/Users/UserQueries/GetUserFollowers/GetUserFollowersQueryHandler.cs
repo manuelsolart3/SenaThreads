@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Users;
+using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
@@ -12,17 +13,30 @@ public class GetUserFollowersQueryHandler : IQueryHandler<GetUserFollowersQuery,
 {
     private readonly IFollowRepository _followRepository;
     private readonly IMapper _mapper;
+    private readonly IAwsS3Service _awsS3Service;
 
-    public GetUserFollowersQueryHandler(IFollowRepository followRepository, IMapper mapper)
+    public GetUserFollowersQueryHandler(
+        IFollowRepository followRepository,
+        IMapper mapper,
+        IAwsS3Service awsS3Service)
     {
         _followRepository = followRepository;
         _mapper = mapper;
+        _awsS3Service = awsS3Service;
     }
 
     public async Task<Result<Pageable<FollowerDto>>> Handle(GetUserFollowersQuery request, CancellationToken cancellationToken)
     {
         
         var paginatedFollowers = await FetchData(request.UserId,request.Page,request.PageSize);
+
+        foreach (var follower in paginatedFollowers.List)
+        {
+            if (!string.IsNullOrEmpty(follower.ProfilePictureS3Key))
+            {
+                follower.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(follower.ProfilePictureS3Key);    
+            }
+        }
 
         return Result.Success(paginatedFollowers);
     }

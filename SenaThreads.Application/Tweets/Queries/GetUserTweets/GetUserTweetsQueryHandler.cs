@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Tweets;
+using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
@@ -11,16 +12,26 @@ public class GetUserTweetsQueryHandler : IQueryHandler<GetUserTweetsQuery, Pagea
 {
     private readonly ITweetRepository _tweetRepository;
     private readonly IMapper _mapper;
+    private readonly IAwsS3Service _awsS3Service;
 
-    public GetUserTweetsQueryHandler(ITweetRepository tweetRepository, IMapper mapper)
+    public GetUserTweetsQueryHandler(ITweetRepository tweetRepository, IMapper mapper, IAwsS3Service awsS3Service)
     {
         _tweetRepository = tweetRepository;
         _mapper = mapper;
+        _awsS3Service = awsS3Service;
     }
 
     public async Task<Result<Pageable<BasicTweetInfoDto>>> Handle(GetUserTweetsQuery request, CancellationToken cancellationToken)
     {
         var paginatedTweets = await FetchData(request.UserId, request.Page, request.PageSize);
+
+        foreach (var tweet in paginatedTweets.List)
+        {
+            foreach (var attachment in tweet.Attachments)
+            {
+                attachment.PresignedUrl = _awsS3Service.GeneratePresignedUrl(attachment.Key);
+            }
+        }
 
         return Result.Success(paginatedTweets);
     }
