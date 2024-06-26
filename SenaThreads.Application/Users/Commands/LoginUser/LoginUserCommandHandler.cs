@@ -22,10 +22,10 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, object>
 
         if (user is null)
         {
-            return Result.Failure<object>(UserError.InvalidCredentials);
+            return Result.Failure<object>(UserError.UserNotFound);
         }
 
-        // Intento de inicio de sesión 
+         // Verificar contraseña del usuario
         var result = await _userManager.CheckPasswordAsync(user, request.Password);
         if (result)
         {

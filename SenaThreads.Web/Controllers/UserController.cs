@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SenaThreads.Application.Dtos.Users;
 using SenaThreads.Application.Users.Commands.BlockUser;
 using SenaThreads.Application.Users.Commands.FollowUser;
 using SenaThreads.Application.Users.Commands.LoginUser;
@@ -11,8 +12,10 @@ using SenaThreads.Application.Users.Commands.UpdateProfile;
 using SenaThreads.Application.Users.Commands.UploadProfilePicture;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowed;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowers;
+using SenaThreads.Application.Users.UserQueries.GetUserInfo;
 using SenaThreads.Application.Users.UserQueries.GetUserProfile;
 using SenaThreads.Application.Users.UserQueries.GetUserRegistrationInfo;
+using SenaThreads.Application.Users.UserQueries.GetUsersNotFollowed;
 using SenaThreads.Application.Users.UserQueries.SearchUsersByUsername;
 
 namespace SenaThreads.Web.Controllers;
@@ -250,5 +253,33 @@ public class UserController : ControllerBase
         return BadRequest(result.Error);
     }
 
+    //OBTENER INFORMACION PRINCIPAL DEL USUARIO
+    [HttpGet("info")]
+    public async Task<IActionResult> GetUserInfo(CancellationToken cancellationToken)
+    {
+        var query = new GetUserInfoQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
+
+    [HttpGet("notfollowed")]
+    public async Task<IActionResult> GetUsersNotFollowed([FromQuery] string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    {
+        var query = new GetUsersNotFollowedQuery(userId, page, pageSize);
+        var result = await _mediator.Send(query);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
 
 }

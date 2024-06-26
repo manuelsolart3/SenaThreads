@@ -26,4 +26,8 @@ public static class UserError
     public static readonly Error RegistrationFailed = new(
         "User.RegistrationFailed",
         "Failed to register use");
+
+    public static readonly Error Unauthorized = new(
+        "User.Unauthorized",
+        "The user is not Unauthorized");
 }

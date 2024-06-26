@@ -20,19 +20,14 @@ public class JwtService
     {
         string keyValue = _configuration["JwtSettings:Key"];
 
-        if (string.IsNullOrEmpty(keyValue))
-        {
-            throw new InvalidOperationException("NO tiene nada!");
-        }
-
         var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(keyValue));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.NameId, user.Id),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
            
         };

@@ -4,9 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
+using SenaThreads.Application.IServices;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Infrastructure.ExternalServices;
 using SenaThreads.Infrastructure.Repositories;
+using SenaThreads.Infrastructure.Services;
 
 namespace SenaThreads.Infrastructure;
 public static class DependencyInjection
@@ -40,6 +42,8 @@ public static class DependencyInjection
         
         // External Services
         services.AddScoped<IAwsS3Service, AwsS3Service>();
+        services.AddScoped<IUserContextService, UserContextService>();
+        services.AddHttpContextAccessor();
 
         //reposiotrios
         services.AddScoped<IUserRepository, UserRepository>();
