@@ -268,6 +268,7 @@ public class UserController : ControllerBase
         return BadRequest(result.Error);
     }
 
+    //OBTENER USUARIOS NO SEGUIDOS
     [HttpGet("notfollowed")]
     public async Task<IActionResult> GetUsersNotFollowed([FromQuery] string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
