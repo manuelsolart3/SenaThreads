@@ -7,6 +7,7 @@ using SenaThreads.Application.Tweets.Commands.PostTweet;
 using SenaThreads.Application.Tweets.Commands.ReactToTweet;
 using SenaThreads.Application.Tweets.Commands.Retweet;
 using SenaThreads.Application.Tweets.Queries.GetAllTweets;
+using SenaThreads.Application.Tweets.Queries.GetTweetByIdQuery;
 using SenaThreads.Application.Tweets.Queries.GetTweetComments;
 using SenaThreads.Application.Tweets.Queries.GetUserMediaTweets;
 using SenaThreads.Application.Tweets.Queries.GetUserRetweets;
@@ -149,6 +150,23 @@ public class TweetController : ControllerBase //proporciona funcionalidades
 
         return BadRequest(result.Error);
     }
+
+    //OBTENER TWEET POR SU ID
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetTweetById(Guid id, CancellationToken cancellationToken)
+    {
+        var query = new GetTweetByIdQuery(id);
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return NotFound(result.Error);
+        }
+
+        return Ok(result.Value);
+    }
+
+
 
     //OBTENER RETWEETS DE UN USUARIO
     [HttpGet("retweets")]
