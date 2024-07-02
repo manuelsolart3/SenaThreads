@@ -7,7 +7,8 @@ public class UserProfileMapper : Profile
 {
     public UserProfileMapper()
     {
-        CreateMap<User, UserProfileDto>();
+        CreateMap<User, UserProfileDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(source => source.Id));
         CreateMap<User, UserRegistrationInfoDto>();
         CreateMap<User, UserInfoDto>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(source => source.Id));
