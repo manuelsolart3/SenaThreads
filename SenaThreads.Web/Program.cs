@@ -12,16 +12,20 @@ using SenaThreads.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cargar configuraciones de entorno
 Env.Load();
 
+// Configuración básica de API y controladores
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 
 // Configuración de autenticación JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
+//Obtener la key de la configuracion y convertila en arreglo de byte
+var key = Encoding.ASCII.GetBytes(jwtSettings.Key);
 
-
+// Configuración de la aplicación y la infraestructura
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -30,13 +34,7 @@ builder.Services.AddIdentityCore<User>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-
-
-//Obtener la key de la configuracion y convertila en arreglo de byte
-var key = Encoding.ASCII.GetBytes(jwtSettings.Key);
-
-
-//Servicios de auth
+// Configuración de autenticación JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -58,46 +56,27 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
 // Registro del servicio de protecci�n de datos
 builder.Services.AddDataProtection();
 
+// Añadir políticas CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMultipleOrigins", policy =>
+    {
+        policy.WithOrigins(
+            "http://localhost:5173",
+            "https://test-sena-book.vercel.app",
+            "https://test-sena-book-git-stg-senathreads.vercel.app",
+            "https://test-sena-book-git-ft-2334-senathreads.vercel.app",
+            "https://test-sena-book-git-ft-2335-senathreads.vercel.app",
+            "https://test-sena-book.vercel.app/auth/")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
-
-// Configurar la política CORS para la URL local
-app.UseCors(policy =>
-{
-    policy.WithOrigins("http://localhost:5173")
-          .AllowAnyHeader()
-          .AllowAnyMethod();
-});
-
-// Configurar la política CORS para la URL principal
-app.UseCors(policy =>
-{
-    policy.WithOrigins("https://test-sena-book.vercel.app")
-          .AllowAnyHeader()
-          .AllowAnyMethod();
-});
-
-// Configurar la política CORS para la URL de staging
-app.UseCors(policy =>
-{
-    policy.WithOrigins("https://test-sena-book-git-stg-senathreads.vercel.app")
-          .AllowAnyHeader()
-          .AllowAnyMethod();
-});
-
-// Configurar la política CORS para las ramas de desarrollo
-app.UseCors(policy =>
-{
-    policy.WithOrigins(
-        "https://test-sena-book-git-ft-2334-senathreads.vercel.app",
-        "https://test-sena-book-git-ft-2335-senathreads.vercel.app")
-          .AllowAnyHeader()
-          .AllowAnyMethod();
-});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -105,7 +84,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
+app.UseStaticFiles();
+// Aplicar la política CORS por defecto
+app.UseCors("AllowMultipleOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
