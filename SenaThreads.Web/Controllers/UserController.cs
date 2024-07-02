@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SenaThreads.Application.Dtos.Users;
 using SenaThreads.Application.Users.Commands.BlockUser;
 using SenaThreads.Application.Users.Commands.FollowUser;
 using SenaThreads.Application.Users.Commands.LoginUser;

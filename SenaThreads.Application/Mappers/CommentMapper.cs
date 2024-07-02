@@ -15,6 +15,7 @@ public class CommentMapper : Profile
         .ForMember(dest => dest.CommentId, opt => opt.MapFrom(source => source.Id))
         .ForMember(dest => dest.UserName, opt => opt.MapFrom(source => source.User.UserName))
         .ForMember(dest => dest.FirstName, opt => opt.MapFrom(source => source.User.FirstName))
-        .ForMember(dest => dest.LastName, opt => opt.MapFrom(source => source.User.LastName));
+        .ForMember(dest => dest.LastName, opt => opt.MapFrom(source => source.User.LastName))
+        .ForMember(dest => dest.ProfilePictureS3Key, opt => opt.MapFrom(source => source.User.ProfilePictureS3Key));
     }
 }

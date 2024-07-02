@@ -35,6 +35,10 @@ public class GetUserMediaTweetsQueryHandler : IQueryHandler<GetUserMediaTweetsQu
             {
                 attachment.PresignedUrl = _awsS3Service.GeneratePresignedUrl(attachment.Key);
             }
+            if (!string.IsNullOrEmpty(tweet.ProfilePictureS3Key))
+            {
+                tweet.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(tweet.ProfilePictureS3Key);
+            }
         }
 
         return Result.Success(paginatedTweets);

@@ -19,13 +19,13 @@ public class DeleteCommentCommandHandler : ICommandHandler<DeleteCommentCommand>
     {
         // Verificar si el Tweet existe en la base de datos
         Tweet tweet = await _tweetRepository.GetByIdAsync(request.TweetId);
-        if (tweet == null)
+        if (tweet is null)
         {
             return Result.Failure(TweetError.NotFound); //No se encontro el Tweet
         }
         // Verificar si el Comentario existe en el tweet
         Comment comment = tweet.Comments.FirstOrDefault(c => c.Id == request.CommentId);
-        if (comment == null)
+        if (comment is null)
         {
             return Result.Failure(TweetError.CommentNotFound); // No se encontró el comentario
         }

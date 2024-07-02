@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SenaThreads.Application.Tweets.Commands.AddCommentToTweet;
+using SenaThreads.Application.Tweets.Commands.DeleteComment;
 using SenaThreads.Application.Tweets.Commands.DeleteTweet;
 using SenaThreads.Application.Tweets.Commands.PostTweet;
 using SenaThreads.Application.Tweets.Commands.ReactToTweet;
@@ -102,6 +103,22 @@ public class TweetController : ControllerBase //proporciona funcionalidades
         if (result.IsSuccess)
         {
             return Ok("Tweet deleted successfully");
+        }
+        else
+        {
+            return BadRequest(result.Error);
+        }
+    }
+
+    //ELIMINAR UN COMMENT   
+    [HttpDelete("delete/comment")]
+    public async Task<IActionResult> DeleteComment([FromBody] DeleteCommentCommand command)
+    {
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok("Comment deleted successfully");
         }
         else
         {
