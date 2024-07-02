@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Events;
@@ -39,6 +34,10 @@ public class GetUserEventsQueryHandler : IQueryHandler<GetUserEventsQuery, Pagea
             if (!string.IsNullOrEmpty(eventDto.Image))
             {
                 eventDto.Image = _awsS3Service.GeneratePresignedUrl(eventDto.Image);
+            }
+            if (!string.IsNullOrEmpty(eventDto.ProfilePictureS3Key))
+            {
+                eventDto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(eventDto.ProfilePictureS3Key);
             }
         }
 

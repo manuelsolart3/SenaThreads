@@ -5,7 +5,6 @@ using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Users;
 using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
-using SenaThreads.Application.Users.UserQueries.GetUserFollowed;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 

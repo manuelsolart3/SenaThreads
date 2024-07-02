@@ -2,27 +2,39 @@
 using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Tweets;
+using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Application.Tweets.Queries.GetTweetComments;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SenaThreads.Application.Tweets.Queries.GetTweetComment;
 public class GetTweetCommentsQueryHandler : IQueryHandler<GetTweetCommentsQuery, Pageable<CommentDto>>
 {
     private readonly ICommentRepository _commentRepository;
     private readonly IMapper _mapper;
+    private readonly IAwsS3Service _awsS3Service;
 
-    public GetTweetCommentsQueryHandler(IMapper mapper, ICommentRepository commentRepository)
+    public GetTweetCommentsQueryHandler(IMapper mapper, ICommentRepository commentRepository, IAwsS3Service awsS3Service)
     {
 
         _mapper = mapper;
         _commentRepository = commentRepository;
+        _awsS3Service = awsS3Service;
     }
 
     public async Task<Result<Pageable<CommentDto>>> Handle(GetTweetCommentsQuery request, CancellationToken cancellationToken)
     {
         var paginatedComments = await FetchData(request.TweetId, request.Page, request.PageSize);
+       
+        foreach (var comment in paginatedComments.List)
+        {
+            if (!string.IsNullOrEmpty(comment.ProfilePictureS3Key))
+            {
+                comment.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(comment.ProfilePictureS3Key);
+            }
+        }
         return Result.Success(paginatedComments);
     }
 

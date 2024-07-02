@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Events;
-using SenaThreads.Application.Dtos.Tweets;
 using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
@@ -36,6 +34,10 @@ public class GetAllEventsQueryHandler : IQueryHandler<GetAllEventsQuery, Pageabl
             if (!string.IsNullOrEmpty(eventDto.Image))
             {
                 eventDto.Image = _awsS3Service.GeneratePresignedUrl(eventDto.Image);
+            }
+            if (!string.IsNullOrEmpty(eventDto.ProfilePictureS3Key))
+            {
+                eventDto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(eventDto.ProfilePictureS3Key);
             }
         }
 
