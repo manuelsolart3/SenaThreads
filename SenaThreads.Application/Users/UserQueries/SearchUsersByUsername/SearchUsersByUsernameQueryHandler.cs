@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Users;
+using SenaThreads.Application.ExternalServices;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
@@ -11,11 +12,13 @@ public class SearchUsersByUsernameQueryHandler : IQueryHandler<SearchUsersByUser
 {
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
+    private readonly IAwsS3Service _awsS3Service;
 
-    public SearchUsersByUsernameQueryHandler(IMapper mapper, UserManager<User> userManager)
+    public SearchUsersByUsernameQueryHandler(IMapper mapper, UserManager<User> userManager, IAwsS3Service awsS3Service)
     {
         _mapper = mapper;
         _userManager = userManager;
+        _awsS3Service = awsS3Service;
     }
 
     public async Task<Result<Pageable<UserDto>>> Handle(SearchUsersByUsernameQuery request, CancellationToken cancellationToken)
@@ -33,6 +36,15 @@ public class SearchUsersByUsernameQueryHandler : IQueryHandler<SearchUsersByUser
             .ToListAsync();
 
         var userDtos = _mapper.Map<List<UserDto>>(pagedUsers);
+
+        // Generar URLs prefirmadas para las imágenes de perfil
+        foreach (var userDto in userDtos)
+        {
+            if (!string.IsNullOrEmpty(userDto.ProfilePictureS3Key))
+            {
+                userDto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(userDto.ProfilePictureS3Key);
+            }
+        }
 
         var pageableResult = new Pageable<UserDto>
         {
