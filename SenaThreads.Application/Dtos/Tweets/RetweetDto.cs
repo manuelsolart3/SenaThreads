@@ -1,7 +1,5 @@
-﻿using SenaThreads.Domain.Tweets;
-
-namespace SenaThreads.Application.Dtos.Tweets;
-public class BasicTweetInfoDto
+﻿namespace SenaThreads.Application.Dtos.Tweets;
+public class RetweetDto
 {
     public string UserId { get; set; }
     public string ProfilePictureS3Key { get; set; }
@@ -16,4 +14,5 @@ public class BasicTweetInfoDto
     public int CommentsCount { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public ICollection<TweetAttachmentDto> Attachments { get; set; }
+    public string RetweetComment { get; set; }
 }

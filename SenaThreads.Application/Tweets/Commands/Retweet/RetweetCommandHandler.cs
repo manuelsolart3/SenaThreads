@@ -32,7 +32,7 @@ public class RetweetCommandHandler : ICommandHandler<RetweetCommand>
         Tweet tweet = await FetchTweetByIdWithRetweets(request.TweetId);
 
         // Verificar si el tweet existe en la base de datos
-        if (tweet == null)
+        if (tweet is null)
         {
 
             return Result.Failure(TweetError.NotFound);
