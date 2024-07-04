@@ -1,10 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using SenaThreads.Application.Users.Commands.BlockUser;
 using SenaThreads.Application.Users.Commands.FollowUser;
+using SenaThreads.Application.Users.Commands.ForgotPassword;
 using SenaThreads.Application.Users.Commands.LoginUser;
 using SenaThreads.Application.Users.Commands.RegisterUser;
+using SenaThreads.Application.Users.Commands.ResetPassword;
 using SenaThreads.Application.Users.Commands.UnBlockUser;
 using SenaThreads.Application.Users.Commands.UnFollowUser;
 using SenaThreads.Application.Users.Commands.UpdateProfile;
@@ -16,6 +19,7 @@ using SenaThreads.Application.Users.UserQueries.GetUserProfile;
 using SenaThreads.Application.Users.UserQueries.GetUserRegistrationInfo;
 using SenaThreads.Application.Users.UserQueries.GetUsersNotFollowed;
 using SenaThreads.Application.Users.UserQueries.SearchUsersByUsername;
+using SenaThreads.Domain.Users;
 
 namespace SenaThreads.Web.Controllers;
 
@@ -63,6 +67,43 @@ public class UserController : ControllerBase
         }
     }
 
+    //OLVIDAR CONTRASEÑA
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
+    {
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok("Password reset email sent successfully.");
+        }
+
+        // Handle failure cases
+        if (result.Error == UserError.UserNotFound)
+        {
+            return NotFound("User not found or email not confirmed.");
+        }
+
+        // Handle other errors as needed
+        return BadRequest("Failed to send password reset email.");
+    }
+
+    //RESTABLECER CONTRASEÑA
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
+    {
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok("Password has been reset successfully.");
+        }
+
+        else
+        {
+            return BadRequest(result.Error);
+        }
+    }
 
 
     //ACTUALIZAR INFO DE PERFIL
@@ -204,9 +245,9 @@ public class UserController : ControllerBase
     //OBTENER LISTA DE SEGUIDORES
     [HttpGet("{userId}/followers")]
     [Authorize]
-    public async Task<IActionResult> GetUserFollowers (string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetUserFollowers(string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var query = new GetUserFollowersQuery (userId, page, pageSize);
+        var query = new GetUserFollowersQuery(userId, page, pageSize);
         var result = await _mediator.Send(query);
 
         if (result.IsSuccess)

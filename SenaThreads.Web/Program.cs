@@ -9,6 +9,7 @@ using SenaThreads.Application;
 using SenaThreads.Application.Authentication;
 using SenaThreads.Domain.Users;
 using SenaThreads.Infrastructure;
+using SenaThreads.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,9 +31,13 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 // Configuración de servicios de Identity
-builder.Services.AddIdentityCore<User>()
-    .AddEntityFrameworkStores<AppDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddIdentityCore<User>(options =>
+{
+    options.Tokens.PasswordResetTokenProvider = "ShortLivedToken";
+})
+.AddEntityFrameworkStores<AppDbContext>()
+.AddDefaultTokenProviders()
+.AddTokenProvider<ShortLivedTokenProvider<User>>("ShortLivedToken");
 
 // Configuración de autenticación JWT
 builder.Services.AddAuthentication(options =>

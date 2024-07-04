@@ -43,6 +43,7 @@ public static class DependencyInjection
         // External Services
         services.AddScoped<IAwsS3Service, AwsS3Service>();
         services.AddScoped<IUserContextService, UserContextService>();
+        services.AddScoped<IEmailService, EmailService>();
         services.AddHttpContextAccessor();
 
         //reposiotrios

@@ -30,4 +30,8 @@ public static class UserError
     public static readonly Error Unauthorized = new(
         "User.Unauthorized",
         "The user is not Unauthorized");
+
+    public static readonly Error PasswordResetFailed = new(
+        "User.PasswordResetFailed",
+        "error occurred while resetting the password");
 }
