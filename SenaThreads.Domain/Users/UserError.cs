@@ -34,4 +34,15 @@ public static class UserError
     public static readonly Error PasswordResetFailed = new(
         "User.PasswordResetFailed",
         "error occurred while resetting the password");
+    
+    public static readonly Error EmailAlreadyExists = new(
+        "User.EmailAlreadyExists",
+        "The Specific Email already exist");
+
+
+     public static readonly Error UsernameAlreadyExists = new(
+        "User.UsernameAlreadyExists",
+        "The Specific username already exist");
+
+
 }

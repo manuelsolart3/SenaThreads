@@ -18,6 +18,22 @@ public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
 
     public async Task<Result> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
+        // Verificar si el correo electrónico ya existe
+        var existingUser = await _userManager.FindByEmailAsync(request.Email);
+        if (existingUser != null)
+        {
+            return Result.Failure(UserError.EmailAlreadyExists);
+        }
+
+        // Verificar si el nombre de usuario ya existe
+        existingUser = await _userManager.FindByNameAsync(request.UserName);
+        if (existingUser != null)
+        {
+            return Result.Failure(UserError.UsernameAlreadyExists);
+        }
+
+
+
         //Agregar una nueva instancia de user
         User newuser = new(
             request.FirstName,
