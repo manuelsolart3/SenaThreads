@@ -1,5 +1,6 @@
 ﻿using MediatR;
+using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Domain.Abstractions;
 
 namespace SenaThreads.Application.Users.Commands.ResetPassword;
-public record ResetPasswordCommand(string Email, string Token, string NewPassword) : IRequest<Result>;
+public record ResetPasswordCommand(string Email, string Token, string NewPassword) : ICommand;

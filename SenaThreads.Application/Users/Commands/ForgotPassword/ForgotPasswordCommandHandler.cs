@@ -1,12 +1,13 @@
 ﻿using System.Security.Cryptography;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.IServices;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
 namespace SenaThreads.Application.Users.Commands.ForgotPassword;
-public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, Result>
+public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordCommand>
 {
      private readonly UserManager<User> _userManager;
     private readonly IEmailService _emailService;
