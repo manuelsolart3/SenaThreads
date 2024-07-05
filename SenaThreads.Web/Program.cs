@@ -39,6 +39,8 @@ builder.Services.AddIdentityCore<User>(options =>
 .AddDefaultTokenProviders()
 .AddTokenProvider<ShortLivedTokenProvider<User>>("ShortLivedToken");
 
+
+
 // Configuración de autenticación JWT
 builder.Services.AddAuthentication(options =>
 {

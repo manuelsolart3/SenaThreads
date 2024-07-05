@@ -42,7 +42,11 @@ public static class UserError
 
      public static readonly Error UsernameAlreadyExists = new(
         "User.UsernameAlreadyExists",
-        "The Specific username already exist");
+        "The Specific username already exist"); 
+    
+    public static readonly Error InvalidToken = new(
+        "User.InvalidToken",
+        "The Specific Token is not correct");
 
 
 }

@@ -12,6 +12,7 @@ using SenaThreads.Application.Users.Commands.UnBlockUser;
 using SenaThreads.Application.Users.Commands.UnFollowUser;
 using SenaThreads.Application.Users.Commands.UpdateProfile;
 using SenaThreads.Application.Users.Commands.UploadProfilePicture;
+using SenaThreads.Application.Users.Commands.ValidateToken;
 using SenaThreads.Application.Users.UserQueries.CheckUserBlockStatus;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowed;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowers;
@@ -106,6 +107,19 @@ public class UserController : ControllerBase
         }
     }
 
+    //VALIDAR TOKEN DE RESTABLECER CONTRASEÑA
+    [HttpPost("validate-token")]
+    public async Task<IActionResult> ValidateToken([FromBody] ValidateTokenCommand command)
+    {
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value); // Devuelve el DTO en caso de éxito
+        }
+
+        return BadRequest(result.Error); // Devuelve los errores en caso de fallo
+    }
 
     //ACTUALIZAR INFO DE PERFIL
     [HttpPut("update-profile")]
