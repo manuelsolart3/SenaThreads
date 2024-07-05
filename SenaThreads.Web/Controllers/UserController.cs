@@ -12,6 +12,7 @@ using SenaThreads.Application.Users.Commands.UnBlockUser;
 using SenaThreads.Application.Users.Commands.UnFollowUser;
 using SenaThreads.Application.Users.Commands.UpdateProfile;
 using SenaThreads.Application.Users.Commands.UploadProfilePicture;
+using SenaThreads.Application.Users.UserQueries.CheckUserBlockStatus;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowed;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowers;
 using SenaThreads.Application.Users.UserQueries.GetUserInfo;
@@ -205,6 +206,23 @@ public class UserController : ControllerBase
             return BadRequest(result.Error);
         }
     }
+
+    // VERIFICAR ESTADO DE BLOQUEO ENTRE DOS USUARIOS
+    [HttpGet("blockstatus")]
+    [Authorize]
+    public async Task<IActionResult> CheckUserBlockStatus([FromQuery] string blockedUserId, [FromQuery] string blockByUserId)
+    {
+        var query = new CheckUserBlockStatusQuery(blockedUserId, blockByUserId);
+        var result = await _mediator.Send(query);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
+
 
     //OBTENER INFO DE PERFIL
     [HttpGet("{userId}/profile")]

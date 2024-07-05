@@ -23,7 +23,7 @@ public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
         if (existingUser != null)
         {
             return Result.Failure(UserError.EmailAlreadyExists);
-        }
+        } 
 
         // Verificar si el nombre de usuario ya existe
         existingUser = await _userManager.FindByNameAsync(request.UserName);
