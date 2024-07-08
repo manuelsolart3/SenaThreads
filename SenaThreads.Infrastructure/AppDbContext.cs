@@ -27,6 +27,7 @@ public sealed class AppDbContext : IdentityDbContext<User>, IUnitOfWork
     public DbSet<Reaction> Reactions { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Event> Events { get; set; }
+    public DbSet<SearchUserHistory> SearchUserHistories{ get; set; }
 
 
     //Creamos el ModelCreate
@@ -36,11 +37,6 @@ public sealed class AppDbContext : IdentityDbContext<User>, IUnitOfWork
         //Con esto registramos la configuración de las entidades de manera automatica,
         // esto examina todas aquellas clases que hereden de IEntityTypeConfiguration
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
-
-        //Excluir las entidades de Identity no necesarias
-        //builder.Ignore<IdentityUserClaim<string>>();
-        //builder.Ignore<IdentityUserLogin<string>>();
-        //builder.Ignore<IdentityUserToken<string>>();
 
         builder.Ignore<IdentityUserRole<string>>();
         builder.Ignore<IdentityRole>();

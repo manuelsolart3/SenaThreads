@@ -27,7 +27,7 @@ public static class DependencyInjection
         else if (profile.Equals("local"))
         {
             connectionString = configuration.GetSection("ConnectionStrings").GetValue<string>("Database") ??
-                               throw new ArgumentNullException(nameof(configuration));   
+                                throw new ArgumentNullException(nameof(configuration));
         }
         else
         {
