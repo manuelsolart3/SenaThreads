@@ -9,14 +9,9 @@ public class SearchUserHistoryRepository : Repository<SearchUserHistory>, ISearc
     {
     }
 
-    public async Task<List<SearchUserHistory>> GetUserSearchHistoryAsync(string userId, int page, int pageSize)
+    public async Task AddAsync(SearchUserHistory searchHistory)
     {
-        return await _context.Set<SearchUserHistory>()
-            .Where(s => s.UserId == userId)
-            .OrderByDescending(s => s.SearchedAt)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+        await _context.SearchUserHistories.AddAsync(searchHistory);
     }
 }
 

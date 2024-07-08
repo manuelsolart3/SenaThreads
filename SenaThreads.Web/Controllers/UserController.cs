@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using SenaThreads.Application.Dtos.Users;
 using SenaThreads.Application.Users.Commands.BlockUser;
 using SenaThreads.Application.Users.Commands.FollowUser;
 using SenaThreads.Application.Users.Commands.ForgotPassword;
@@ -13,12 +15,14 @@ using SenaThreads.Application.Users.Commands.UnFollowUser;
 using SenaThreads.Application.Users.Commands.UpdateProfile;
 using SenaThreads.Application.Users.Commands.UploadProfilePicture;
 using SenaThreads.Application.Users.Commands.ValidateToken;
+using SenaThreads.Application.Users.Commands.VisitProfile;
 using SenaThreads.Application.Users.UserQueries.CheckUserBlockStatus;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowed;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowers;
 using SenaThreads.Application.Users.UserQueries.GetUserInfo;
 using SenaThreads.Application.Users.UserQueries.GetUserProfile;
 using SenaThreads.Application.Users.UserQueries.GetUserRegistrationInfo;
+using SenaThreads.Application.Users.UserQueries.GetUserSearchHistory;
 using SenaThreads.Application.Users.UserQueries.GetUsersNotFollowed;
 using SenaThreads.Application.Users.UserQueries.SearchUsersByUsername;
 using SenaThreads.Domain.Users;
@@ -71,6 +75,7 @@ public class UserController : ControllerBase
 
     //OLVIDAR CONTRASEÑA
     [HttpPost("forgot-password")]
+    [Authorize]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
     {
         var result = await _mediator.Send(command);
@@ -92,6 +97,7 @@ public class UserController : ControllerBase
 
     //RESTABLECER CONTRASEÑA
     [HttpPost("reset-password")]
+    [Authorize]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
     {
         var result = await _mediator.Send(command);
@@ -310,6 +316,39 @@ public class UserController : ControllerBase
         }
     }
 
+    
+    //OBTENER USUARIOS NO SEGUIDOS
+    [HttpGet("notfollowed")]
+    [Authorize]
+    public async Task<IActionResult> GetUsersNotFollowed([FromQuery] string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    {
+        var query = new GetUsersNotFollowedQuery(userId, page, pageSize);
+        var result = await _mediator.Send(query);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
+
+    //OBTENER INFORMACION PRINCIPAL DEL USUARIO
+    [HttpGet("info")]
+    [Authorize]
+    public async Task<IActionResult> GetUserInfo(CancellationToken cancellationToken)
+    {
+        var query = new GetUserInfoQuery();
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
+
     //BUSCAR USUARIO POR SU USERNAME
     [HttpGet("search")]
     [Authorize]
@@ -325,12 +364,19 @@ public class UserController : ControllerBase
         return BadRequest(result.Error);
     }
 
-    //OBTENER INFORMACION PRINCIPAL DEL USUARIO
-    [HttpGet("info")]
-    public async Task<IActionResult> GetUserInfo(CancellationToken cancellationToken)
+    //BUSCAR HISTORIAL
+    [HttpGet("search-history")]
+    [Authorize]
+    public async Task<ActionResult<List<UserSearchHistoryDto>>> GetSearchHistory([FromQuery] int limit = 10)
     {
-        var query = new GetUserInfoQuery();
-        var result = await _mediator.Send(query, cancellationToken);
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var query = new GetUserSearchHistoryQuery(UserId: userId, Limit: limit);
+        var result = await _mediator.Send(query);
 
         if (result.IsSuccess)
         {
@@ -340,19 +386,28 @@ public class UserController : ControllerBase
         return BadRequest(result.Error);
     }
 
-    //OBTENER USUARIOS NO SEGUIDOS
-    [HttpGet("notfollowed")]
-    public async Task<IActionResult> GetUsersNotFollowed([FromQuery] string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+
+    [HttpPost("visit-profile/{visitedUserId}")]
+    [Authorize]
+    public async Task<IActionResult> VisitProfile(string visitedUserId)
     {
-        var query = new GetUsersNotFollowedQuery(userId, page, pageSize);
-        var result = await _mediator.Send(query);
+        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(currentUserId))
+        {
+            return Unauthorized();
+        }
+
+        var command = new VisitProfileCommand(currentUserId, visitedUserId);
+        var result = await _mediator.Send(command);
 
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            return Ok();
         }
-
-        return BadRequest(result.Error);
+        else
+        {
+            return BadRequest(result.Error);
+        }
     }
 
 }

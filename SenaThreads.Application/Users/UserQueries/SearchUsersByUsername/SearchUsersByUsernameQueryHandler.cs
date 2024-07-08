@@ -32,8 +32,8 @@ public class SearchUsersByUsernameQueryHandler : IQueryHandler<SearchUsersByUser
 
         // Filtrar y ordenar a nivel de base de datos
         var usersQueryable = _userManager.Users
-            .Where(u => u.UserName.ToLower().Contains(searchTerm))
-            .OrderBy(u => u.UserName);
+         .Where(u => u.Id != request.UserId && u.UserName.ToLower().Contains(searchTerm))
+         .OrderBy(u => u.UserName);
 
         // Obtener el conteo total de usuarios filtrados
         int totalCount = await usersQueryable.CountAsync(cancellationToken);
@@ -46,14 +46,19 @@ public class SearchUsersByUsernameQueryHandler : IQueryHandler<SearchUsersByUser
 
         var userDtos = _mapper.Map<List<UserDto>>(pagedUsers);
 
-        // Generar URLs prefirmadas para las imágenes de perfil
+        // Generar URLs prefirmadas para las imágenes de perfil 
         foreach (var userDto in userDtos)
         {
             if (!string.IsNullOrEmpty(userDto.ProfilePictureS3Key))
             {
                 userDto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(userDto.ProfilePictureS3Key);
             }
+
+            // Registrar la búsqueda para cada usuario encontrado
+            var searchHistory = new SearchUserHistory(request.UserId, userDto.UserId);
+            await _searchUserHistoryRepository.AddAsync(searchHistory);
         }
+
 
         var pageableResult = new Pageable<UserDto>
         {

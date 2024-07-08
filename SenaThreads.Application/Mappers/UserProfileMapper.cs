@@ -15,6 +15,8 @@ public class UserProfileMapper : Profile
         CreateMap<User, UserDto>()
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(source => source.Id))
             .ForMember(dest => dest.ProfilePictureS3Key, opt => opt.MapFrom(src => src.ProfilePictureS3Key));
+
+        CreateMap<SearchUserHistory, UserSearchHistoryDto>();
     }
 
 }

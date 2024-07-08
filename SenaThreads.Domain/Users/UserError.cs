@@ -48,5 +48,8 @@ public static class UserError
         "User.InvalidToken",
         "The Specific Token is not correct");
 
+    public static readonly Error CannotOwnInformation = new(
+        "User.CannotOwnInformation",
+        "you Cannot visit own profile");
 
 }
