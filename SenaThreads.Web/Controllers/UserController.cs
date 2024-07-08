@@ -75,7 +75,7 @@ public class UserController : ControllerBase
 
     //OLVIDAR CONTRASEÑA
     [HttpPost("forgot-password")]
-    [Authorize]
+    
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
     {
         var result = await _mediator.Send(command);
@@ -97,7 +97,7 @@ public class UserController : ControllerBase
 
     //RESTABLECER CONTRASEÑA
     [HttpPost("reset-password")]
-    [Authorize]
+   
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand command)
     {
         var result = await _mediator.Send(command);

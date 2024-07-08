@@ -5,4 +5,9 @@ namespace SenaThreads.Application.Notifications.Commands.SendNotification;
 public record SendNotificationCommand(
     string UserId,
     NotificationType Type,
-    string Path) : ICommand;
+    string Path,
+    string Username,
+    string FirstName,
+    string LastName,
+    string ProfilePictureS3Key
+    ) : ICommand;

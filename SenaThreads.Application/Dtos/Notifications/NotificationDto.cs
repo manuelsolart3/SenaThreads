@@ -3,12 +3,13 @@
 namespace SenaThreads.Application.Dtos.Notifications;
 public class NotificationDto
 {
-    public Guid Id { get; set; }
-    public string UserName { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
+    public Guid NotifierUserId { get; set; }
+    public string NotifierUserName { get; set; }
+    public string NotifierFirstName { get; set; }
+    public string NotifierLastName { get; set; }
     public NotificationType Type { get; set; }
     public string Path { get; set; }
     public bool IsRead { get; set; }
     public DateTime CreatedOnUtc { get; set; }
+    public string NotifierProfilePictureS3Key { get; set; }
 }
