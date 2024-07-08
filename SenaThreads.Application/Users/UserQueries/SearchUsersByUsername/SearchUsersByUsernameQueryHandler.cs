@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Users;
 using SenaThreads.Application.ExternalServices;
+using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
@@ -13,27 +14,35 @@ public class SearchUsersByUsernameQueryHandler : IQueryHandler<SearchUsersByUser
     private readonly UserManager<User> _userManager;
     private readonly IMapper _mapper;
     private readonly IAwsS3Service _awsS3Service;
+    private readonly ISearchUserHistoryRepository _searchUserHistoryRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public SearchUsersByUsernameQueryHandler(IMapper mapper, UserManager<User> userManager, IAwsS3Service awsS3Service)
+    public SearchUsersByUsernameQueryHandler(IMapper mapper, UserManager<User> userManager, IAwsS3Service awsS3Service, ISearchUserHistoryRepository searchUserHistoryRepository, IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
         _userManager = userManager;
         _awsS3Service = awsS3Service;
+        _searchUserHistoryRepository = searchUserHistoryRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<Result<Pageable<UserDto>>> Handle(SearchUsersByUsernameQuery request, CancellationToken cancellationToken)
     {
+        var searchTerm = request.SearchTerm.ToLower();
+
+        // Filtrar y ordenar a nivel de base de datos
         var usersQueryable = _userManager.Users
-            .Where(u => u.UserName.Contains(request.SearchTerm)) // Filtrar por usernames que contengan el término de búsqueda
-            .OrderBy(u => u.UserName.StartsWith(request.SearchTerm) ? 0 : 1); // Ordenar por nombres que comienzan con el término de búsqueda primero
-            
+            .Where(u => u.UserName.ToLower().Contains(searchTerm))
+            .OrderBy(u => u.UserName);
 
-        int totalCount = await usersQueryable.CountAsync();
+        // Obtener el conteo total de usuarios filtrados
+        int totalCount = await usersQueryable.CountAsync(cancellationToken);
 
+        // Aplicar paginación
         var pagedUsers = await usersQueryable
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         var userDtos = _mapper.Map<List<UserDto>>(pagedUsers);
 

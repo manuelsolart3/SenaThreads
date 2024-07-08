@@ -13,11 +13,13 @@ public class SearchUserHistoryConfiguration : IEntityTypeConfiguration<SearchUse
 
         builder.HasOne(x => x.User)
         .WithMany()
-        .HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+        .HasForeignKey(x => x.UserId)
+        .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.SearchedUser)
        .WithMany()
-       .HasForeignKey(x => x.SearchedUserId).OnDelete(DeleteBehavior.Restrict);
+       .HasForeignKey(x => x.SearchedUserId)
+       .OnDelete(DeleteBehavior.Restrict);
 
     }
 }

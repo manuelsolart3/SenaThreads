@@ -19,12 +19,12 @@ public static class DependencyInjection
         var profile = configuration.GetValue<string>("Profile") ?? 
                       throw new ArgumentNullException(nameof(configuration));
         
-        if (profile.Equals("prod"))
+        if (profile.Equals("local"))
         {
             connectionString = Env.GetString("ConnectionString") ??
                                throw new ArgumentNullException(nameof(configuration));
         }
-        else if (profile.Equals("local"))
+        else if (profile.Equals("prod"))
         {
             connectionString = configuration.GetSection("ConnectionStrings").GetValue<string>("Database") ??
                                 throw new ArgumentNullException(nameof(configuration));
@@ -56,6 +56,7 @@ public static class DependencyInjection
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<IReactionRepository, ReactionRepository>();
         services.AddScoped<IRetweetRepository,RetweetRepository>();
+        services.AddScoped<ISearchUserHistoryRepository,SearchUserHistoryRepository>();
 
         services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
 
