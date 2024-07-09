@@ -52,6 +52,7 @@ public class GetUserNotificationsQueryHandler : IQueryHandler<GetUserNotificatio
         foreach (var notification in pagedNotifications)
         {
             var notificationDto = _mapper.Map<NotificationDto>(notification);
+            notificationDto.NotificationId = notification.Id;
 
             // Buscar información del notificador
             User notifier = await _userManager.FindByIdAsync(notification.NotifierUserId);
