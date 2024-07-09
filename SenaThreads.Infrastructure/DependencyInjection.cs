@@ -18,7 +18,7 @@ public static class DependencyInjection
         string connectionString = null;
         var profile = configuration.GetValue<string>("Profile") ?? 
                       throw new ArgumentNullException(nameof(configuration));
-        
+
         if (profile.Equals("local"))
         {
             connectionString = Env.GetString("ConnectionString") ??
@@ -27,11 +27,11 @@ public static class DependencyInjection
         else if (profile.Equals("prod"))
         {
             connectionString = configuration.GetSection("ConnectionStrings").GetValue<string>("Database") ??
-                                throw new ArgumentNullException(nameof(configuration));
+                                 throw new ArgumentNullException(nameof(configuration));
         }
         else
         {
-            throw new ArgumentNullException(nameof(configuration)); 
+            throw new ArgumentNullException(nameof(configuration));
         }
         
         //DbContext y cc de conexion

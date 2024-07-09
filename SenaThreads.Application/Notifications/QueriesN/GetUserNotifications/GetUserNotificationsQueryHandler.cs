@@ -14,15 +14,15 @@ public class GetUserNotificationsQueryHandler : IQueryHandler<GetUserNotificatio
 {
     private readonly INotificationRepository _notificationRepository;
     private readonly IMapper _mapper;
-    private readonly UserManager<User> _userManager;
     private readonly IAwsS3Service _awsS3Service;
+    private readonly UserManager<User> _userManager;
 
-    public GetUserNotificationsQueryHandler(INotificationRepository notificationRepository, IMapper mapper, UserManager<User> userManager, IAwsS3Service awsS3Service)
+    public GetUserNotificationsQueryHandler(INotificationRepository notificationRepository, IMapper mapper, IAwsS3Service awsS3Service, UserManager<User> userManager)
     {
         _notificationRepository = notificationRepository;
         _mapper = mapper;
-        _userManager = userManager;
         _awsS3Service = awsS3Service;
+        _userManager = userManager;
     }
 
     public async Task<Result<Pageable<NotificationDto>>> Handle(GetUserNotificationsQuery request, CancellationToken cancellationToken)
@@ -35,10 +35,9 @@ public class GetUserNotificationsQueryHandler : IQueryHandler<GetUserNotificatio
     {
         int start = pageSize * (page - 1);
 
-        // Consultar las notificaciones del usuario incluyendo la información del usuario que envió la notificación
+        // Consultar las notificaciones del usuario
         IQueryable<Notification> notificationsQuery = _notificationRepository.Queryable()
-            .Where(n => n.UserId == userId)
-            .Include(n => n.User); // Incluir la información del usuario que envió la notificación
+            .Where(n => n.ReceiverUserId == userId);
 
         int totalCount = await notificationsQuery.CountAsync();
 
@@ -48,29 +47,30 @@ public class GetUserNotificationsQueryHandler : IQueryHandler<GetUserNotificatio
             .Take(pageSize)
             .ToListAsync();
 
-        // Mapear las notificaciones a NotificationDto incluyendo los detalles del usuario que envió la notificación
+        // Mapear las notificaciones a NotificationDto
         List<NotificationDto> notificationDtos = new List<NotificationDto>();
         foreach (var notification in pagedNotifications)
         {
-            // Obtener los detalles del usuario que envió la notificación
-            var senderUser = await _userManager.FindByIdAsync(notification.UserId);
-            if (senderUser != null)
+            var notificationDto = _mapper.Map<NotificationDto>(notification);
+
+            // Buscar información del notificador
+            User notifier = await _userManager.FindByIdAsync(notification.NotifierUserId);
+
+            if (notifier != null)
             {
-                // Mapear la notificación a NotificationDto incluyendo los detalles del usuario que envió la notificación
-                var notificationDto = _mapper.Map<NotificationDto>(notification);
-                notificationDto.NotifierUserName = senderUser.UserName;
-                notificationDto.NotifierFirstName = senderUser.FirstName;
-                notificationDto.NotifierLastName = senderUser.LastName;
-                notificationDto.NotifierProfilePictureS3Key = senderUser.ProfilePictureS3Key;
+                notificationDto.NotifierUserId = notifier.Id;
+                notificationDto.NotifierUserName = notifier.UserName;
+                notificationDto.NotifierFirstName = notifier.FirstName;
+                notificationDto.NotifierLastName = notifier.LastName;
 
-                // Generar la URL firmada de la imagen del perfil si existe ProfilePictureS3Key
-                if (!string.IsNullOrEmpty(senderUser.ProfilePictureS3Key))
+                // Generar la URL firmada de la imagen del perfil si existe NotifierProfilePictureS3Key
+                if (!string.IsNullOrEmpty(notifier.ProfilePictureS3Key))
                 {
-                    notificationDto.NotifierProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(senderUser.ProfilePictureS3Key);
+                    notificationDto.NotifierProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(notifier.ProfilePictureS3Key);
                 }
-
-                notificationDtos.Add(notificationDto);
             }
+
+            notificationDtos.Add(notificationDto);
         }
 
         return new Pageable<NotificationDto>
@@ -80,3 +80,4 @@ public class GetUserNotificationsQueryHandler : IQueryHandler<GetUserNotificatio
         };
     }
 }
+

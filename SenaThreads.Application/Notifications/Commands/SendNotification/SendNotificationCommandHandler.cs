@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
@@ -12,44 +13,40 @@ public class SendNotificationCommandHandler : ICommandHandler<SendNotificationCo
     private readonly INotificationRepository _notificationRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<User> _userManager;
-    private readonly IAwsS3Service _awsS3Service;
 
-
-    public SendNotificationCommandHandler(INotificationRepository notificationRepository, IUnitOfWork unitOfWork, UserManager<User> userManager, IAwsS3Service awsS3Service)
+    public SendNotificationCommandHandler(INotificationRepository notificationRepository, IUnitOfWork unitOfWork, UserManager<User> userManager)
     {
         _notificationRepository = notificationRepository;
         _unitOfWork = unitOfWork;
         _userManager = userManager;
-        _awsS3Service = awsS3Service;
     }
 
-    public async Task<Result>Handle(SendNotificationCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(SendNotificationCommand request, CancellationToken cancellationToken)
     {
-        // Buscar información adicional del usuario que envía la notificación
-        User sender = await _userManager.FindByIdAsync(request.UserId);
-        if (sender is null)
+        // Buscar información del notificador
+        User notifier = await _userManager.FindByIdAsync(request.NotifierUserId);
+        if (notifier is null)
         {
-            // Manejo de error si el usuario no existe
+            return Result.Failure(UserError.UserNotFound);
+        }
+
+        // Verificar que el destinatario existe
+        var receiverExists = await _userManager.Users.AnyAsync(u => u.Id == request.ReceiverUserId);
+        if (!receiverExists)
+        {
             return Result.Failure(UserError.UserNotFound);
         }
 
         // Crear nueva notificación
         Notification newNotification = new Notification(
-           request.UserId,
+           request.ReceiverUserId,
+           request.NotifierUserId,
            request.Type,
-           request.Path)
-        {
-            
-            UserName = sender.UserName,
-            FirstName = sender.FirstName,
-            LastName = sender.LastName,
-            ProfilePictureS3Key = sender.ProfilePictureS3Key
-        };
+           request.Path);
 
         _notificationRepository.Add(newNotification);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
-
     }
 }

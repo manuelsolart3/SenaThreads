@@ -5,7 +5,7 @@ public class SendNotificationValidator : AbstractValidator<SendNotificationComma
 {
     public SendNotificationValidator()
     {
-        RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required.");
+        RuleFor(x => x.NotifierUserId).NotEmpty().WithMessage("UserId is required.");
         RuleFor(x => x.Type).NotEmpty().WithMessage("Type is required.");
         RuleFor(x => x.Path).NotEmpty().WithMessage("Path is required.");
           

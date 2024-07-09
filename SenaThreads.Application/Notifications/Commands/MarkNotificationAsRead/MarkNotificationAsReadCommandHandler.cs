@@ -26,7 +26,7 @@ public class MarkNotificationAsReadCommandHandler : ICommandHandler<MarkNotifica
         }
 
         // Validar si el usuario tiene permiso para marcar la notificación como leída
-        if (notification.UserId != request.UserId)
+        if (notification.NotifierUserId != request.UserId)
         {
             return Result.Failure(NotificationError.Unauthorized); // Usuario no autorizado para marcar la notificación
         }

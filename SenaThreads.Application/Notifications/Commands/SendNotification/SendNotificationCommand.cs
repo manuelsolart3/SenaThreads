@@ -3,11 +3,8 @@ using SenaThreads.Domain.Notifications;
 
 namespace SenaThreads.Application.Notifications.Commands.SendNotification;
 public record SendNotificationCommand(
-    string UserId,
+    string NotifierUserId,
+    string ReceiverUserId,
     NotificationType Type,
-    string Path,
-    string Username,
-    string FirstName,
-    string LastName,
-    string ProfilePictureS3Key
-    ) : ICommand;
+    string Path
+) : ICommand;

@@ -11,7 +11,7 @@ public class NotificationConfiguration : IEntityTypeConfiguration<Notification>
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Path).IsRequired(true);
         builder.Property(x => x.Type).HasConversion<int>().IsRequired(true);
-        builder.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId);
+        builder.HasOne(x => x.Receiver).WithMany().HasForeignKey(x => x.ReceiverUserId);
 
     }
 }

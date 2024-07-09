@@ -3,7 +3,7 @@
 namespace SenaThreads.Application.Dtos.Notifications;
 public class NotificationDto
 {
-    public Guid NotifierUserId { get; set; }
+    public string  NotifierUserId { get; set; }
     public string NotifierUserName { get; set; }
     public string NotifierFirstName { get; set; }
     public string NotifierLastName { get; set; }
