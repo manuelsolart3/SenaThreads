@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using SenaThreads.Application.Dtos.Users;
 using SenaThreads.Application.Users.Commands.BlockUser;
+using SenaThreads.Application.Users.Commands.DeleteSearchHistory;
 using SenaThreads.Application.Users.Commands.FollowUser;
 using SenaThreads.Application.Users.Commands.ForgotPassword;
 using SenaThreads.Application.Users.Commands.LoginUser;
@@ -403,6 +404,30 @@ public class UserController : ControllerBase
         if (result.IsSuccess)
         {
             return Ok();
+        }
+        else
+        {
+            return BadRequest(result.Error);
+        }
+    }
+
+    //ELIMINAR HISTORIAL DE UN USUARIO
+    [HttpDelete("search-history")]
+    [Authorize]
+    public async Task<IActionResult> DeleteSearchHistory()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized();
+        }
+
+        var command = new DeleteSearchHistoryCommand(userId);
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok("Search history deleted successfully.");
         }
         else
         {

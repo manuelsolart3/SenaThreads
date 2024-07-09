@@ -5,4 +5,5 @@ namespace SenaThreads.Application.IRepositories;
 public interface ISearchUserHistoryRepository : IRepository<SearchUserHistory>
 {
     Task AddAsync(SearchUserHistory searchHistory);
+    Task DeleteAllForUserAsync(string userId);
 }

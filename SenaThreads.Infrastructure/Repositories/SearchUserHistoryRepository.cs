@@ -13,5 +13,14 @@ public class SearchUserHistoryRepository : Repository<SearchUserHistory>, ISearc
     {
         await _context.SearchUserHistories.AddAsync(searchHistory);
     }
+
+    public async Task DeleteAllForUserAsync(string userId)
+    {
+        var userHistory = await _context.SearchUserHistories
+              .Where(h => h.UserId == userId)
+              .ToListAsync();
+
+        _context.SearchUserHistories.RemoveRange(userHistory);
+    }
 }
 
