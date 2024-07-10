@@ -8,7 +8,7 @@ using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
 namespace SenaThreads.Application.Users.UserQueries.GetUserFollowed;
-public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, List<FollowerDto>>
+public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, FollowerResultDto>
 {
     private readonly IFollowRepository _followRepository;
     private readonly IMapper _mapper;
@@ -23,10 +23,9 @@ public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, L
         _mapper = mapper;
         _awsS3Service = awsS3Service;
     }
-    public async Task<Result<List<FollowerDto>>> Handle(GetUserFollowedQuery request, CancellationToken cancellationToken)
+    public async Task<Result<FollowerResultDto>> Handle(GetUserFollowedQuery request, CancellationToken cancellationToken)
     {
-        var followedUsers = await FetchData(request.UserId, request.Limit);
-
+        var (followedUsers, totalCount) = await FetchData(request.UserId, request.Limit);
 
         foreach (var followed in followedUsers)
         {
@@ -36,25 +35,26 @@ public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, L
             }
         }
 
-        return Result.Success(followedUsers);  
+        return Result.Success(new FollowerResultDto(followedUsers, totalCount));
     }
 
-    //Método para aplicar la consulta y paginacion
-    private async Task<List<FollowerDto>> FetchData(string userId, int? limit)
+    private async Task<(List<FollowerDto>, int)> FetchData(string userId, int? limit)
     {
-
-        IQueryable<User> followedsQuery = _followRepository.Queryable()
+        var followedsQuery = _followRepository.Queryable()
             .Where(f => f.FollowerUserId == userId)
-            .Include(u => u.FollowedByUser) //Incluir la info del usuario
-            .Select(f => f.FollowedByUser);//Solo los usuarios seguidos
-            
+            .Include(u => u.FollowedByUser)
+            .Select(f => f.FollowedByUser);
+
+        int totalCount = await followedsQuery.CountAsync();
+
         if (limit.HasValue)
         {
             followedsQuery = followedsQuery.Take(limit.Value);
         }
 
         var followeds = await followedsQuery.ToListAsync();
-       
-        return _mapper.Map<List<FollowerDto>>(followeds);
+        var followerDtos = _mapper.Map<List<FollowerDto>>(followeds);
+
+        return (followerDtos, totalCount);
     }
 }
