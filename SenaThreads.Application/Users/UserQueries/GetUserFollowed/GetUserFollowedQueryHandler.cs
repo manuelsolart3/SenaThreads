@@ -8,7 +8,7 @@ using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Users;
 
 namespace SenaThreads.Application.Users.UserQueries.GetUserFollowed;
-public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, Pageable<FollowerDto>>
+public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, List<FollowerDto>>
 {
     private readonly IFollowRepository _followRepository;
     private readonly IMapper _mapper;
@@ -23,12 +23,12 @@ public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, P
         _mapper = mapper;
         _awsS3Service = awsS3Service;
     }
-    public async Task<Result<Pageable<FollowerDto>>> Handle(GetUserFollowedQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<FollowerDto>>> Handle(GetUserFollowedQuery request, CancellationToken cancellationToken)
     {
-        var paginatedFolloweds = await FetchData(request.UserId, request.Page, request.PageSize);
+        var followedUsers = await FetchData(request.UserId, request.Limit);
 
 
-        foreach (var followed in paginatedFolloweds.List)
+        foreach (var followed in followedUsers)
         {
             if (!string.IsNullOrEmpty(followed.ProfilePictureS3Key))
             {
@@ -36,36 +36,25 @@ public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, P
             }
         }
 
-        return Result.Success(paginatedFolloweds);  
+        return Result.Success(followedUsers);  
     }
 
     //Método para aplicar la consulta y paginacion
-    private async Task<Pageable<FollowerDto>> FetchData(string userId, int page, int pageSize)
+    private async Task<List<FollowerDto>> FetchData(string userId, int? limit)
     {
-        int start = pageSize * (page - 1);
 
         IQueryable<User> followedsQuery = _followRepository.Queryable()
             .Where(f => f.FollowerUserId == userId)
             .Include(u => u.FollowedByUser) //Incluir la info del usuario
-            .Select(f => f.FollowedByUser); //Solo los usuarios seguidos
-
-        //Total de todos los seguidos
-        int totalCount = await followedsQuery.CountAsync();
-
-        //Paginacion
-        List<User> followeds = await followedsQuery
-            .Skip(start)
-            .Take(pageSize)
-            .ToListAsync();
-
-        //Mapeo al Dto
-        List<FollowerDto> followerDtos = _mapper.Map<List<FollowerDto>>(followeds);
-
-        //Objeto pageable con la lista de Dtos y el total de Seguidores
-        return new Pageable<FollowerDto>
+            .Select(f => f.FollowedByUser);//Solo los usuarios seguidos
+            
+        if (limit.HasValue)
         {
-            List = followerDtos,
-            Count = totalCount
-        };
+            followedsQuery = followedsQuery.Take(limit.Value);
+        }
+
+        var followeds = await followedsQuery.ToListAsync();
+       
+        return _mapper.Map<List<FollowerDto>>(followeds);
     }
 }

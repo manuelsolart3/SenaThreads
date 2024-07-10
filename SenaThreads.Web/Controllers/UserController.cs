@@ -284,9 +284,9 @@ public class UserController : ControllerBase
     //OBTENER LISTA DE SEGUIDORES
     [HttpGet("{userId}/followers")]
     [Authorize]
-    public async Task<IActionResult> GetUserFollowers(string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetUserFollowers(string userId, [FromQuery] int? limit)
     {
-        var query = new GetUserFollowersQuery(userId, page, pageSize);
+        var query = new GetUserFollowersQuery(userId, limit );
         var result = await _mediator.Send(query);
 
         if (result.IsSuccess)
@@ -302,9 +302,9 @@ public class UserController : ControllerBase
     //OBTENER LISTA DE SEGUIDOS
     [HttpGet("{userId}/followed")]
     [Authorize]
-    public async Task<IActionResult> GetUserFollowed(string userId, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetUserFollowed(string userId, [FromQuery] int? limit)
     {
-        var query = new GetUserFollowedQuery(userId, page, pageSize);
+        var query = new GetUserFollowedQuery(userId, limit);
         var result = await _mediator.Send(query);
 
         if (result.IsSuccess)
