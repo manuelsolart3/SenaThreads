@@ -13,7 +13,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.FirstName).HasMaxLength(25).IsRequired(true);
         builder.Property(x => x.LastName).HasMaxLength(25).IsRequired(true);
         builder.Property(x => x.PhoneNumber).HasMaxLength(20).IsRequired(false);
-        builder.Property(x => x.Biography).HasMaxLength(50).IsRequired(false);
+        builder.Property(x => x.Biography).HasMaxLength(150).IsRequired(false);
         builder.Property(x => x.City).HasMaxLength(25).IsRequired(false);
         builder.Property(u => u.DateOfBirth).IsRequired(false);
         builder.Property(u => u.ProfilePictureS3Key).IsRequired(false);
