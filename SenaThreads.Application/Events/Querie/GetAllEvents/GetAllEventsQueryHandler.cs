@@ -4,6 +4,7 @@ using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.Dtos.Events;
 using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
+using SenaThreads.Application.IServices;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Events;
 using SenaThreads.Domain.Tweets;
@@ -14,20 +15,33 @@ public class GetAllEventsQueryHandler : IQueryHandler<GetAllEventsQuery, Pageabl
     private readonly IEventRepository _eventRepository;
     private readonly IMapper _mapper;
     private readonly IAwsS3Service  _awsS3Service;
+    private readonly IBlockFilterService _blockFilterService;
+    private readonly ICurrentUserService _currentUserService;
 
     public GetAllEventsQueryHandler(
         IEventRepository eventRepository
         , IMapper mapper,
-        IAwsS3Service awsS3Service)
+        IAwsS3Service awsS3Service,
+        IBlockFilterService blockFilterService,
+        ICurrentUserService currentUserService)
     {
         _eventRepository = eventRepository;
         _mapper = mapper;
         _awsS3Service = awsS3Service;
+        _blockFilterService = blockFilterService;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Result<Pageable<EventDto>>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
     {
-        var paginatedEvent = await FetchData(request.Page, request.PageSize);
+        var currentUserId = _currentUserService.UserId;
+        var paginatedEvent = await FetchData(request.Page, request.PageSize, currentUserId);
+
+        
+        if (!string.IsNullOrEmpty(currentUserId))
+        {
+            paginatedEvent.List = (await _blockFilterService.FilterBlockedContent(paginatedEvent.List, currentUserId, e => e.UserId)).ToList();
+        }
 
         foreach (var eventDto in paginatedEvent.List)
         {
@@ -45,7 +59,7 @@ public class GetAllEventsQueryHandler : IQueryHandler<GetAllEventsQuery, Pageabl
 
 
     }
-    private async Task<Pageable<EventDto>> FetchData(int page, int pageSize)
+    private async Task<Pageable<EventDto>> FetchData(int page, int pageSize, string currentUserId)
     {
         int start = pageSize * (page - 1);
 
@@ -66,6 +80,9 @@ public class GetAllEventsQueryHandler : IQueryHandler<GetAllEventsQuery, Pageabl
 
         List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
 
+
+        // Aplicar el filtro de bloqueo
+        eventDtos = (await _blockFilterService.FilterBlockedContent(eventDtos, currentUserId, e => e.UserId)).ToList();
 
         //Retorna objeto con la lista de Dtos y el total eventos
         return new Pageable<EventDto>

@@ -44,6 +44,8 @@ public static class DependencyInjection
         services.AddScoped<IAwsS3Service, AwsS3Service>();
         services.AddScoped<IUserContextService, UserContextService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IBlockFilterService, BlockFilterService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddHttpContextAccessor();
 
         //reposiotrios

@@ -16,4 +16,14 @@ public class UserBlockRepository : Repository<UserBlock>, IUserBlockRepository
             .AnyAsync(b => b.BlockedUserId == blockedUserId 
             && b.BlockByUserId == blockByUserId);
     }
+
+    public async Task<ISet<string>> GetMutuallyBlockedUserIds(string userId)
+    {
+        var blockedUsers = await _context.UserBlocks
+            .Where(ub => ub.BlockByUserId == userId || ub.BlockedUserId == userId)
+            .Select(ub => ub.BlockByUserId == userId ? ub.BlockedUserId : ub.BlockByUserId)
+            .ToListAsync();
+
+        return new HashSet<string>(blockedUsers);
+    }
 }
