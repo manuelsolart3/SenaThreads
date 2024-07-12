@@ -41,15 +41,27 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
         }
 
         var currentUserId = _currentUserService.UserId;
-        var shouldFilter = await _blockFilterService.FilterBlockedContent(new[] { user }, currentUserId, u => u.Id);
+        var filteredContent = await _blockFilterService.FilterBlockedContent(new[] { user }, currentUserId, u => u.Id);
 
-        if (!shouldFilter.Any())
+        UserProfileDto userProfileDto;
+
+        if (!filteredContent.Any())
         {
-            return Result.Failure<UserProfileDto>(UserError.UserBlocked); 
+            // Si el contenido está bloqueado, devolver un DTO con información básica.
+            userProfileDto = new UserProfileDto
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                // Los demás campos se dejan en blanco o con valores predeterminados.
+            };
+
+            return Result.Success(userProfileDto);
         }
 
         // Mapear la entidad de usuario a un DTO de perfil
-        UserProfileDto userProfileDto = _mapper.Map<UserProfileDto>(user);
+        userProfileDto = _mapper.Map<UserProfileDto>(user);
 
         if (!string.IsNullOrEmpty(user.ProfilePictureS3Key))
         {
