@@ -5,6 +5,7 @@ using SenaThreads.Application.Dtos.Tweets;
 using SenaThreads.Application.Dtos.Users;
 using SenaThreads.Application.ExternalServices;
 using SenaThreads.Application.IRepositories;
+using SenaThreads.Application.IServices;
 using SenaThreads.Domain.Abstractions;
 using SenaThreads.Domain.Tweets;
 using SenaThreads.Domain.Users;
@@ -15,16 +16,22 @@ public class GetTweetByIdQueryHandler : IQueryHandler<GetTweetByIdQuery, BasicTw
     private readonly ITweetRepository _tweetRepository;
     private readonly IMapper _mapper;
     private readonly IAwsS3Service _awsS3Service;
+    private readonly IBlockFilterService _blockFilterService;
+    private readonly ICurrentUserService _currentUserService;
 
-    public GetTweetByIdQueryHandler(ITweetRepository tweetRepository, IMapper mapper, IAwsS3Service awsS3Service)
+    public GetTweetByIdQueryHandler(ITweetRepository tweetRepository, IMapper mapper, IAwsS3Service awsS3Service, IBlockFilterService blockFilterService, ICurrentUserService currentUserService)
     {
         _tweetRepository = tweetRepository;
         _mapper = mapper;
         _awsS3Service = awsS3Service;
+        _blockFilterService = blockFilterService;
+        _currentUserService = currentUserService;
     }
 
     public async Task<Result<BasicTweetInfoDto>> Handle(GetTweetByIdQuery request, CancellationToken cancellationToken)
     {
+       var currentUserId = _currentUserService.UserId;
+        
         Tweet tweet = await FetchData(request.TweetId);
 
         if (tweet is null)
@@ -32,8 +39,17 @@ public class GetTweetByIdQueryHandler : IQueryHandler<GetTweetByIdQuery, BasicTw
             return Result.Failure<BasicTweetInfoDto>(TweetError.NotFound);
         }
 
-        BasicTweetInfoDto basicTweetInfoDto = _mapper.Map<BasicTweetInfoDto>(tweet);
 
+
+        var tweetDto = _mapper.Map<BasicTweetInfoDto>(tweet);
+        var filteredTweetDto = await _blockFilterService.FilterBlockedContent(new List<BasicTweetInfoDto> { tweetDto }, currentUserId, t => t.UserId);
+
+        if (!filteredTweetDto.Any())
+        {
+            return Result.Failure<BasicTweetInfoDto>(UserError.UserBlocked);
+        }
+
+        var basicTweetInfoDto = filteredTweetDto.First();
         // Gestionar las imágenes adjuntas
         foreach (var attachment in basicTweetInfoDto.Attachments)
         {
