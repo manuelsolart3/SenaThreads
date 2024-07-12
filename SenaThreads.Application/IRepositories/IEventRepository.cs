@@ -4,4 +4,5 @@ using SenaThreads.Domain.Events;
 namespace SenaThreads.Application.IRepositories;
 public interface IEventRepository : IRepository<Event>
 {
+    Task<Event> FindByIdAsync(Guid eventId);
 }

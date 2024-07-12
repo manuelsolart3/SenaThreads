@@ -100,4 +100,24 @@ public class AwsS3Service : IAwsS3Service
         };
         return _s3Client.GetPreSignedURL(request);
     }
+
+    public async Task DeleteFileFromS3Async(string fileUrl)
+    {
+        try
+        {
+            
+            var deleteObjectRequest = new DeleteObjectRequest
+            {
+                BucketName = _bucketName,
+                Key = fileUrl
+            };
+
+            await _s3Client.DeleteObjectAsync(deleteObjectRequest);
+        }
+        catch (AmazonS3Exception e)
+        {
+            
+            throw new Exception($"Error occurred while deleting the file: {e.Message}", e);
+        }
+    }
 }

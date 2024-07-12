@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SenaThreads.Application.Dtos.Events;
 using SenaThreads.Application.Events.Commands.CreateEvent;
 using SenaThreads.Application.Events.Commands.DeleteEvent;
+using SenaThreads.Application.Events.Commands.EditEvent;
 using SenaThreads.Application.Events.Querie.GetAllEvents;
 using SenaThreads.Application.Events.Querie.GetUserEvents;
 
@@ -78,6 +79,22 @@ public class EventController : ControllerBase
         if (result.IsSuccess)
         {
             return Ok(result.Value);
+        }
+        else
+        {
+            return BadRequest(result.Error);
+        }
+    }
+
+    //EDITAR UN EVENTO EXISTENTE
+    [HttpPost("edit")]
+    public async Task<IActionResult> EditEvent([FromForm] EditEventCommand command)
+    {
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok("Event Edited successfully");
         }
         else
         {
