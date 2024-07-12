@@ -61,34 +61,31 @@ public class GetAllEventsQueryHandler : IQueryHandler<GetAllEventsQuery, Pageabl
     }
     private async Task<Pageable<EventDto>> FetchData(int page, int pageSize, string currentUserId)
     {
-        int start = pageSize * (page - 1);
-
-        IQueryable<Event> eventQuery = _eventRepository.Queryable()
+        // Obtener todos los eventos
+        var allEvents = await _eventRepository.Queryable()
             .Include(e => e.User)
-            .OrderByDescending(c => c.CreatedOnUtc);
-
-
-
-
-        int totalCount = await eventQuery.CountAsync();
-
-        List<Event> events = await eventQuery
-            .Skip(start)
-            .Take(pageSize)
+            .OrderByDescending(c => c.CreatedOnUtc)
             .ToListAsync();
 
+        // Mapear a DTOs
+        var allEventDtos = _mapper.Map<List<EventDto>>(allEvents);
 
-        List<EventDto> eventDtos = _mapper.Map<List<EventDto>>(events);
+        // Aplicar el filtro de bloqueo a todos los eventos
+        var filteredEventDtos = await _blockFilterService.FilterBlockedContent(allEventDtos, currentUserId, e => e.UserId);
 
+        // Calcular el total de eventos filtrados
+        int totalFilteredCount = filteredEventDtos.Count();
 
-        // Aplicar el filtro de bloqueo
-        eventDtos = (await _blockFilterService.FilterBlockedContent(eventDtos, currentUserId, e => e.UserId)).ToList();
+        // Aplicar paginación después del filtrado
+        var paginatedEventDtos = filteredEventDtos
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
-        //Retorna objeto con la lista de Dtos y el total eventos
         return new Pageable<EventDto>
         {
-            List = eventDtos,
-            Count = totalCount
+            List = paginatedEventDtos,
+            Count = totalFilteredCount
         };
     }
 }

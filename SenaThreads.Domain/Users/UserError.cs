@@ -51,5 +51,9 @@ public static class UserError
     public static readonly Error CannotOwnInformation = new(
         "User.CannotOwnInformation",
         "you Cannot visit own profile");
+    
+    public static readonly Error UserBlocked = new(
+        "User.UserBlocked",
+        "User is blocked or has blocked you");
 
 }
