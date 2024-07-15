@@ -2,6 +2,6 @@
 using SenaThreads.Application.Dtos.Users;
 
 namespace SenaThreads.Application.Users.Commands.ValidateToken;
-public record ValidateTokenCommand(string Email, string Token) : ICommand<TokenValidationResultDto>;
+public record ValidateTokenCommand(string email, string token) : ICommand<TokenValidationResultDto>;
 
 

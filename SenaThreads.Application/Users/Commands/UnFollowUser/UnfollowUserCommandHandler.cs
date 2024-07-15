@@ -21,8 +21,8 @@ public class UnfollowUserCommandHandler : ICommandHandler<UnfollowUserCommand>
 
     public async Task<Result> Handle(UnfollowUserCommand request, CancellationToken cancellationToken)
     {
-        User followerUserId = await _userManager.FindByIdAsync(request.FollowerUserId);
-        User followedByUserId = await _userManager.FindByIdAsync(request.FollowedByUserId);
+        User followerUserId = await _userManager.FindByIdAsync(request.followerUserId);
+        User followedByUserId = await _userManager.FindByIdAsync(request.followedByUserId);
 
         if (followerUserId is null || followedByUserId is null)
         {
@@ -32,8 +32,8 @@ public class UnfollowUserCommandHandler : ICommandHandler<UnfollowUserCommand>
         //Buscamos la relacion de seugimiento
         Follow follow = await _followRepository
             .Queryable()
-            .FirstOrDefaultAsync(x => x.FollowerUserId == request.FollowerUserId
-            && x.FollowedByUserId == request.FollowedByUserId);
+            .FirstOrDefaultAsync(x => x.FollowerUserId == request.followerUserId
+            && x.FollowedByUserId == request.followedByUserId);
         if (follow != null)
         {
             _followRepository.Delete(follow);

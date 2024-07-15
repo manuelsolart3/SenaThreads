@@ -16,21 +16,21 @@ public class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand>
 
     public async Task<Result> Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await _userManager.FindByEmailAsync(request.email);
         if (user is null)
         {
             return Result.Failure(UserError.UserNotFound);
         }
 
         // Validación explícita del token
-        var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", request.Token);
+        var isValidToken = await _userManager.VerifyUserTokenAsync(user, _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", request.token);
         if (!isValidToken)
         {
             return Result.Failure(UserError.InvalidToken);
         }
 
         //Se resetea la contraseña del user encontrado
-        var resetResult = await _userManager.ResetPasswordAsync(user, request.Token, request.NewPassword);
+        var resetResult = await _userManager.ResetPasswordAsync(user, request.token, request.newPassword);
         if (!resetResult.Succeeded)
         {
             return Result.Failure(UserError.PasswordResetFailed);

@@ -2,5 +2,5 @@
 
 namespace SenaThreads.Application.Users.Commands.FollowUser;
 public record FollowUserCommand(
-    string FollowerUserId,
-    string FollowedByUserId) :ICommand;
+    string followerUserId,
+    string followedByUserId) :ICommand;

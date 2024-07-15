@@ -21,7 +21,7 @@ public class ForgotPasswordCommandHandler : ICommandHandler<ForgotPasswordComman
     public async Task<Result> Handle(ForgotPasswordCommand request, CancellationToken cancellationToken)
     {
         // Buscar el usuario por su email
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await _userManager.FindByEmailAsync(request.email);
         if (user is null )
         {
             // Manejar el caso en que el usuario no existe o su email no está confirmado

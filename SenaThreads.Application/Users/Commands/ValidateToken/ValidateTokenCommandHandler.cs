@@ -16,13 +16,13 @@ public class ValidateTokenCommandHandler : ICommandHandler<ValidateTokenCommand,
 
     public async Task<Result<TokenValidationResultDto>> Handle(ValidateTokenCommand request, CancellationToken cancellationToken)
     {
-        var user = await _userManager.FindByEmailAsync(request.Email);
+        var user = await _userManager.FindByEmailAsync(request.email);
         if (user is null)
         {
             return Result.Failure<TokenValidationResultDto>(UserError.UserNotFound);
         }
 
-        var isValidToken = await _userManager.VerifyUserTokenAsync(user, "ShortLivedToken", "ResetPassword", request.Token);
+        var isValidToken = await _userManager.VerifyUserTokenAsync(user, "ShortLivedToken", "ResetPassword", request.token);
 
         if (!isValidToken)
         {
@@ -32,8 +32,8 @@ public class ValidateTokenCommandHandler : ICommandHandler<ValidateTokenCommand,
         // Crear el DTO con el email y el token
         var validationResult = new TokenValidationResultDto
         {
-            Email = request.Email,
-            Token = request.Token
+            Email = request.email,
+            Token = request.token
         };
 
         // Devolver el DTO como parte del resultado

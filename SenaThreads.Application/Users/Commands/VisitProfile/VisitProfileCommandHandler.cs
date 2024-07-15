@@ -20,12 +20,12 @@ public class VisitProfileCommandHandler : ICommandHandler<VisitProfileCommand, U
 
     public async Task<Result<Unit>> Handle(VisitProfileCommand request, CancellationToken cancellationToken)
     {
-        if (request.VisitingUserId == request.VisitedUserId)
+        if (request.visitingUserId == request.visitedUserId)
         {
             return Result.Failure<Unit>(UserError.CannotOwnInformation);
         }
 
-        var searchHistory = new SearchUserHistory(request.VisitingUserId, request.VisitedUserId);
+        var searchHistory = new SearchUserHistory(request.visitingUserId, request.visitedUserId);
 
         await _searchUserHistoryRepository.AddAsync(searchHistory);
 

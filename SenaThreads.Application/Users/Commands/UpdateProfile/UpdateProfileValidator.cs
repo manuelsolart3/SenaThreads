@@ -5,9 +5,9 @@ public class UpdateProfileValidator : AbstractValidator<UpadateProfileCommand>
 {
     public UpdateProfileValidator()
     {
-        RuleFor(x => x.DateOfBirth)
+        RuleFor(x => x.dateOfBirth)
             .Must(BeAValidDateOfBirth)
-            .When(x => x.DateOfBirth.HasValue)
+            .When(x => x.dateOfBirth.HasValue)
             .WithMessage("Date of birth must be a valid date");
     }
     private bool BeAValidDateOfBirth(DateOnly? date)

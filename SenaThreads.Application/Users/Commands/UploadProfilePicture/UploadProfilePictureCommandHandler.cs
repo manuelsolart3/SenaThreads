@@ -19,7 +19,7 @@ public class UploadProfilePictureCommandHandler : ICommandHandler<UploadProfileP
 
     public async Task<Result> Handle(UploadProfilePictureCommand request, CancellationToken cancellationToken)
     {
-        User user = await _userManager.FindByIdAsync(request.UserId);
+        User user = await _userManager.FindByIdAsync(request.userId);
 
         if (user is  null)
         { 
@@ -27,7 +27,7 @@ public class UploadProfilePictureCommandHandler : ICommandHandler<UploadProfileP
         }
 
         // Subir la imagen de perfil a AWS S3
-        string profilePicturekey = await _awsS3Service.UploadFileToS3Async(request.ProfilePictureS3key);
+        string profilePicturekey = await _awsS3Service.UploadFileToS3Async(request.profilePictureS3key);
 
         //Actualizar o subir la imagen de perfil
         user.ProfilePictureS3Key = profilePicturekey;

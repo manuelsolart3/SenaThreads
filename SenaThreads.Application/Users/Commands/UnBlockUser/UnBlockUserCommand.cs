@@ -2,5 +2,5 @@
 
 namespace SenaThreads.Application.Users.Commands.UnBlockUser;
 public record UnBlockUserCommand(
-    string BlockedUserId,
-    string BlockByUserId) : ICommand;
+    string blockedUserId,
+    string blockByUserId) : ICommand;

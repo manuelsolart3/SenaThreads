@@ -21,23 +21,23 @@ public class FollowUserCommandHandler : ICommandHandler<FollowUserCommand>
     public async Task<Result> Handle(FollowUserCommand request, CancellationToken cancellationToken)
     {
         //Buscar al usuario seguidor y usuario seguido
-        User followerUser = await _userManager.FindByIdAsync(request.FollowerUserId);
-        User followedByUserId = await _userManager.FindByIdAsync(request.FollowedByUserId);
+        User followerUser = await _userManager.FindByIdAsync(request.followerUserId);
+        User followedByUserId = await _userManager.FindByIdAsync(request.followedByUserId);
 
         if (followerUser is null || followedByUserId is null)
         {
             return Result.Failure(UserError.UserNotFound);
         }
         // Verificar si ya existe el seguimiento
-        if (await _followRepository.IsFollowing(request.FollowerUserId, request.FollowedByUserId))
+        if (await _followRepository.IsFollowing(request.followerUserId, request.followedByUserId))
         {
             return Result.Failure(UserError.AlreadyExists);
         }
 
         //obejto de seguimiento
         Follow newfollow = new (
-            request.FollowerUserId,
-            request.FollowedByUserId); 
+            request.followerUserId,
+            request.followedByUserId); 
         
         //Agregar el nuevo seguimiento 
         _followRepository.Add(newfollow);

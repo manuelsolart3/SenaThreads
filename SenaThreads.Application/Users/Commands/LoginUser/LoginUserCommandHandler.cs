@@ -18,7 +18,7 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, object>
 
     public async Task<Result<object>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
-        User user = await _userManager.FindByEmailAsync(request.Email);
+        User user = await _userManager.FindByEmailAsync(request.email);
 
         if (user is null)
         {
@@ -26,7 +26,7 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, object>
         }
 
          // Verificar contraseña del usuario
-        var result = await _userManager.CheckPasswordAsync(user, request.Password);
+        var result = await _userManager.CheckPasswordAsync(user, request.password);
         if (result)
         {
             var token = _jwtService.GenerateToken(user);

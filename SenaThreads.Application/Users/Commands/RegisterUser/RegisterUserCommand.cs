@@ -2,8 +2,8 @@
 
 namespace SenaThreads.Application.Users.Commands.RegisterUser;
 public record RegisterUserCommand(
-    string FirstName,
-    string LastName,
-    string Email,
-    string UserName,
-    string Password) :ICommand;
+    string firstName,
+    string lastName,
+    string email,
+    string userName,
+    string password) :ICommand;

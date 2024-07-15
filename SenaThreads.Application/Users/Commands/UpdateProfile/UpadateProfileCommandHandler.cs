@@ -15,31 +15,31 @@ public class UpadateProfileCommandHandler : ICommandHandler<UpadateProfileComman
     
     public async Task<Result> Handle(UpadateProfileCommand request, CancellationToken cancellationToken)
     {
-        User user = await _userManager.FindByIdAsync(request.UserId);
+        User user = await _userManager.FindByIdAsync(request.userId);
         if (user is null)
         {
             return Result.Failure(UserError.UserNotFound);
         }
 
         // Actualizar solo los campos que no sean nulos
-        if (request.PhoneNumber is not null)
+        if (request.phoneNumber is not null)
         {
-            user.PhoneNumber = request.PhoneNumber;
+            user.PhoneNumber = request.phoneNumber;
         }
 
-        if (request.Biography is not null)
+        if (request.biography is not null)
         {
-            user.Biography = request.Biography;
+            user.Biography = request.biography;
         }
 
-        if (request.City is not null)
+        if (request.city is not null)
         {
-            user.City = request.City;
+            user.City = request.city;
         }
 
-        if (request.DateOfBirth.HasValue)
+        if (request.dateOfBirth.HasValue)
         {
-            user.DateOfBirth = request.DateOfBirth.Value;
+            user.DateOfBirth = request.dateOfBirth.Value;
         }
 
 

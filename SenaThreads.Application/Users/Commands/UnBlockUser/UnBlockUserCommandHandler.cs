@@ -21,8 +21,8 @@ public class UnBlockUserCommandHandler : ICommandHandler<UnBlockUserCommand>
 
     public async Task<Result> Handle(UnBlockUserCommand request, CancellationToken cancellationToken)
     {
-        User blockUserId = await _userManager.FindByIdAsync(request.BlockedUserId);
-        User blockByUserId = await _userManager.FindByIdAsync(request.BlockByUserId);
+        User blockUserId = await _userManager.FindByIdAsync(request.blockedUserId);
+        User blockByUserId = await _userManager.FindByIdAsync(request.blockByUserId);
 
         if (blockUserId is null || blockByUserId is null)
         {
@@ -32,8 +32,8 @@ public class UnBlockUserCommandHandler : ICommandHandler<UnBlockUserCommand>
         //Buscar la relacion de bloqueo
         UserBlock block = await _userBlockRepository
             .Queryable()
-            .FirstOrDefaultAsync(x => x.BlockedUserId == request.BlockedUserId
-            && x.BlockByUserId == request.BlockByUserId);
+            .FirstOrDefaultAsync(x => x.BlockedUserId == request.blockedUserId
+            && x.BlockByUserId == request.blockByUserId);
 
         if (block != null)
         {
