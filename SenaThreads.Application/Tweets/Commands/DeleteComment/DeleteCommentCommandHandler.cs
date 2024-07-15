@@ -18,20 +18,20 @@ public class DeleteCommentCommandHandler : ICommandHandler<DeleteCommentCommand>
     public async Task<Result>Handle(DeleteCommentCommand request, CancellationToken cancellationToken)
     {
         // Verificar si el Tweet existe en la base de datos
-        Tweet tweet = await _tweetRepository.GetByIdAsync(request.TweetId);
+        Tweet tweet = await _tweetRepository.GetByIdAsync(request.tweetId);
         if (tweet is null)
         {
             return Result.Failure(TweetError.NotFound); //No se encontro el Tweet
         }
         // Verificar si el Comentario existe en el tweet
-        Comment comment = tweet.Comments.FirstOrDefault(c => c.Id == request.CommentId);
+        Comment comment = tweet.Comments.FirstOrDefault(c => c.Id == request.commentId);
         if (comment is null)
         {
             return Result.Failure(TweetError.CommentNotFound); // No se encontró el comentario
         }
 
         // Verificar si el usuario es el creador del comentario
-        if (comment.UserId != request.UserId)
+        if (comment.UserId != request.userId)
         {
             return Result.Failure(TweetError.Unauthorized); // El usuario no es el creador del comentario
         }

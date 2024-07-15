@@ -2,6 +2,6 @@
 
 namespace SenaThreads.Application.Tweets.Commands.AddCommentToTweet;
 public record AddCommentToTweetCommand(
-    Guid TweetId,
-    string UserId,
-    string Text) : ICommand;
+    Guid tweetId,
+    string userId,
+    string text) : ICommand;

@@ -17,14 +17,14 @@ public class DeleteTweetCommandHandler : ICommandHandler<DeleteTweetCommand>
 
     public async Task<Result> Handle(DeleteTweetCommand request, CancellationToken cancellationToken)
     {   //Obtener el Tweet que se requiere eliminar en la Bd
-        Tweet tweet = await _tweetRepository.GetByIdAsync(request.TweetId);
+        Tweet tweet = await _tweetRepository.GetByIdAsync(request.tweetId);
         // Verificar si el Tweet existe o si el usuario es el creador del tweet en la Bd
         if (tweet == null )
         {
             return Result.Failure(TweetError.NotFound);//no se encontro ningun tweet 
         }
 
-        if (tweet.UserId != request.UserId)
+        if (tweet.UserId != request.userId)
         {
             return Result.Failure(TweetError.Unauthorized);//No es el creador
         }

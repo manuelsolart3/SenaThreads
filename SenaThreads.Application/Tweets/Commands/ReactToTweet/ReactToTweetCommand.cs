@@ -5,8 +5,8 @@ namespace SenaThreads.Application.Tweets.Commands.ReactToTweet;
 
 //Representa la intencion del usuario de reaccionar a un tweet
 public record ReactToTweetCommand ( 
-    Guid TweetId,
-    string UserId,
-    ReactionType Type) : ICommand;
+    Guid tweetId,
+    string userId,
+    ReactionType type) : ICommand;
     
 

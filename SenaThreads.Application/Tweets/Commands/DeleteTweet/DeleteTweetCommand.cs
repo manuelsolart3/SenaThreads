@@ -3,6 +3,6 @@ using SenaThreads.Domain.Abstractions;
 
 namespace SenaThreads.Application.Tweets.Commands.DeleteTweet;
 public record DeleteTweetCommand (
-    Guid TweetId,
-    string UserId) : ICommand;
+    Guid tweetId,
+    string userId) : ICommand;
 

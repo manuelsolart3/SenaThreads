@@ -5,8 +5,8 @@ public class AddCommentToTweetValidator : AbstractValidator<AddCommentToTweetCom
 {
     public AddCommentToTweetValidator()
     {
-        RuleFor(x => x.TweetId).NotEmpty().WithMessage("TweetId is required.");
-        RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required.");
-        RuleFor(x => x.Text).NotEmpty().WithMessage("The text of the commentary is required");
+        RuleFor(x => x.tweetId).NotEmpty().WithMessage("TweetId is required.");
+        RuleFor(x => x.userId).NotEmpty().WithMessage("UserId is required.");
+        RuleFor(x => x.tweetId).NotEmpty().WithMessage("The text of the commentary is required");
     }
 }

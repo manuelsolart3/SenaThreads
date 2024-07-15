@@ -34,14 +34,14 @@ public class AddCommentToTweetCommandHandler : ICommandHandler<AddCommentToTweet
 
     public async Task<Result> Handle(AddCommentToTweetCommand request, CancellationToken cancellationToken)
     {
-        User commenter = await _userManager.FindByIdAsync(request.UserId);
+        User commenter = await _userManager.FindByIdAsync(request.userId);
         if (commenter is null)
         {
             return Result.Failure(UserError.UserNotFound);
         }
 
         //Obtener el tweet al que se requiere comentar
-        Tweet tweet = await FetchTweetByIdWithComments(request.TweetId);
+        Tweet tweet = await FetchTweetByIdWithComments(request.tweetId);
         // Verificar si el Tweet existe en la BD
         if (tweet is null)
         {
@@ -50,9 +50,9 @@ public class AddCommentToTweetCommandHandler : ICommandHandler<AddCommentToTweet
 
         // Crear el comentario
         var comment = new Comment(
-            request.TweetId,
-            request.UserId,
-            request.Text
+            request.tweetId,
+            request.userId,
+            request.text
         );
 
         // Agregar el nuevo comentario al repositorio de comentarios

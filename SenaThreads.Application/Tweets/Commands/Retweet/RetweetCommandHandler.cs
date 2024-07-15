@@ -29,7 +29,7 @@ public class RetweetCommandHandler : ICommandHandler<RetweetCommand>
 
 
         // Obtener el tweet al que se requiere retweetear
-        Tweet tweet = await FetchTweetByIdWithRetweets(request.TweetId);
+        Tweet tweet = await FetchTweetByIdWithRetweets(request.tweetId);
 
         // Verificar si el tweet existe en la base de datos
         if (tweet is null)
@@ -39,7 +39,7 @@ public class RetweetCommandHandler : ICommandHandler<RetweetCommand>
         }
 
         // Verificar si el usuario ya retwitteó este tweet
-        bool alreadyRetweeted = tweet.Retweets.Any(x => x.RetweetedById == request.RetweetedById);
+        bool alreadyRetweeted = tweet.Retweets.Any(x => x.RetweetedById == request.retweetedById);
         if (alreadyRetweeted)
         {
 
@@ -47,9 +47,9 @@ public class RetweetCommandHandler : ICommandHandler<RetweetCommand>
         }
 
         var newRetweet = new RetweetEntity(
-            request.TweetId,
-            request.RetweetedById,
-            request.Comment
+            request.tweetId,
+            request.retweetedById,
+            request.comment
         );
 
         // Agregar el nuevo retweet al repositorio de retweets

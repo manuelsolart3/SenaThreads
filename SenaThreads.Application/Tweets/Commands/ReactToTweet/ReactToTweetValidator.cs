@@ -6,8 +6,8 @@ public class ReactToTweetValidator : AbstractValidator<ReactToTweetCommand>
 {
     public ReactToTweetValidator()
     {
-        RuleFor(x => x.TweetId).NotEmpty().WithMessage("TweetId is required.");
-        RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required.");
-        RuleFor(x => x.Type).IsInEnum().WithMessage("Invalid reaction type");
+        RuleFor(x => x.tweetId).NotEmpty().WithMessage("TweetId is required.");
+        RuleFor(x => x.userId).NotEmpty().WithMessage("UserId is required.");
+        RuleFor(x => x.type).IsInEnum().WithMessage("Invalid reaction type");
     }
 }

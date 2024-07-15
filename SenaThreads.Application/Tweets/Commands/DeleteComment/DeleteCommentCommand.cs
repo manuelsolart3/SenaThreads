@@ -2,6 +2,6 @@
 
 namespace SenaThreads.Application.Tweets.Commands.DeleteComment;
 public record DeleteCommentCommand(
-    Guid TweetId,
-    Guid CommentId,
-    string UserId) : ICommand;
+    Guid tweetId,
+    Guid commentId,
+    string userId) : ICommand;

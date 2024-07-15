@@ -27,8 +27,8 @@ public class PostTweetCommandHandler : ICommandHandler<PostTweetCommand>
 
         // Crear el nuevo tweet
         Tweet newTweet = new Tweet(
-            request.UserId,
-            request.Text,
+            request.userId,
+            request.text,
             tweetAttachments);
 
        
@@ -48,9 +48,9 @@ public class PostTweetCommandHandler : ICommandHandler<PostTweetCommand>
     private async Task UploadAttachments(PostTweetCommand request, Tweet newTweet, List<TweetAttachment> tweetAttachments)
     {
         // TODO: Lógica para la creación de los 'attachments' del tweet y guardarlos en un bucket de S3 de AWS
-        if (request.Attachments != null)
+        if (request.attachments != null)
         {
-            foreach (var attachment in request.Attachments)
+            foreach (var attachment in request.attachments)
             {
                 var key = await _awsS3Service.UploadFileToS3Async(attachment);
                 

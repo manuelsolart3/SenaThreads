@@ -25,7 +25,7 @@ public class ReactToTweetCommandHandler : ICommandHandler<ReactToTweetCommand>
     {
 
         //Obtener el tweet al que se requiere Reaccionar
-        Tweet tweet = await FetchTweetByIdWithReactions(request.TweetId);
+        Tweet tweet = await FetchTweetByIdWithReactions(request.tweetId);
         // Verificar si el Tweet existe en la BD
         if (tweet == null)
         {
@@ -33,13 +33,13 @@ public class ReactToTweetCommandHandler : ICommandHandler<ReactToTweetCommand>
         }
 
         // Verificar si el usuario ya reaccionó a este Tweet
-        Reaction existingReaction = tweet.Reactions.FirstOrDefault(x => x.UserId == request.UserId);
+        Reaction existingReaction = tweet.Reactions.FirstOrDefault(x => x.UserId == request.userId);
         if (existingReaction != null)
         {
 
-            if (existingReaction.Type != request.Type) //comparamos si el tipo es el mismo
+            if (existingReaction.Type != request.type) //comparamos si el tipo es el mismo
             {
-                existingReaction.Type = request.Type; // Actualizar la reacción si es diferente
+                existingReaction.Type = request.type; // Actualizar la reacción si es diferente
                 return Result.Success(); //Devolver un resultado para indicar que se actualizo
             }
         }
@@ -47,9 +47,9 @@ public class ReactToTweetCommandHandler : ICommandHandler<ReactToTweetCommand>
         {
             //lo agregamos a la  coleccion de reacciones en el Tweet
             var newReaction = new Reaction( // Agregamos una nueva instancia de reaction con los parametros del command 
-                request.TweetId,
-                request.UserId,
-                request.Type);
+                request.tweetId,
+                request.userId,
+                request.type);
             // Agregar la nueva reacción al repositorio de reacciones
             _reactionRepository.Add(newReaction);
 
