@@ -24,14 +24,14 @@ public class SendNotificationCommandHandler : ICommandHandler<SendNotificationCo
     public async Task<Result> Handle(SendNotificationCommand request, CancellationToken cancellationToken)
     {
         // Buscar información del notificador
-        User notifier = await _userManager.FindByIdAsync(request.NotifierUserId);
+        User notifier = await _userManager.FindByIdAsync(request.notifierUserId);
         if (notifier is null)
         {
             return Result.Failure(UserError.UserNotFound);
         }
 
         // Verificar que el destinatario existe
-        var receiverExists = await _userManager.Users.AnyAsync(u => u.Id == request.ReceiverUserId);
+        var receiverExists = await _userManager.Users.AnyAsync(u => u.Id == request.receiverUserId);
         if (!receiverExists)
         {
             return Result.Failure(UserError.UserNotFound);
@@ -39,10 +39,10 @@ public class SendNotificationCommandHandler : ICommandHandler<SendNotificationCo
 
         // Crear nueva notificación
         Notification newNotification = new Notification(
-           request.ReceiverUserId,
-           request.NotifierUserId,
-           request.Type,
-           request.Path);
+           request.receiverUserId,
+           request.notifierUserId,
+           request.type,
+           request.path);
 
         _notificationRepository.Add(newNotification);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

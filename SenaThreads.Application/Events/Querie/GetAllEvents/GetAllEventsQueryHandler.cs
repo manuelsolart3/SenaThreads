@@ -35,7 +35,7 @@ public class GetAllEventsQueryHandler : IQueryHandler<GetAllEventsQuery, Pageabl
     public async Task<Result<Pageable<EventDto>>> Handle(GetAllEventsQuery request, CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserService.UserId;
-        var paginatedEvent = await FetchData(request.Page, request.PageSize, currentUserId);
+        var paginatedEvent = await FetchData(request.page, request.pageSize, currentUserId);
 
         
         if (!string.IsNullOrEmpty(currentUserId))
@@ -47,11 +47,11 @@ public class GetAllEventsQueryHandler : IQueryHandler<GetAllEventsQuery, Pageabl
         {
             if (!string.IsNullOrEmpty(eventDto.Image))
             {
-                eventDto.Image = _awsS3Service.GeneratePresignedUrl(eventDto.Image);
+                eventDto.Image = _awsS3Service.GeneratepresignedUrl(eventDto.Image);
             }
-            if (!string.IsNullOrEmpty(eventDto.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(eventDto.ProfilePictureS3key))
             {
-                eventDto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(eventDto.ProfilePictureS3Key);
+                eventDto.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(eventDto.ProfilePictureS3key);
             }
         }
 

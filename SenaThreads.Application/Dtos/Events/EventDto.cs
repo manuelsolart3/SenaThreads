@@ -4,7 +4,7 @@ namespace SenaThreads.Application.Dtos.Events;
 public class EventDto
 {
     public Guid EventId { get; set; }
-    public string ProfilePictureS3Key { get; set; }
+    public string ProfilePictureS3key { get; set; }
     public string UserId { get; set; }
     public string UserName { get; set; }
     public string FirstName { get; set; }

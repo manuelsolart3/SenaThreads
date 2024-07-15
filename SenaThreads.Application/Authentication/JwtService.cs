@@ -18,7 +18,7 @@ public class JwtService
 
     public string GenerateToken(User user)
     {
-        string keyValue = _configuration["JwtSettings:Key"];
+        string keyValue = _configuration["JwtSettings:key"];
 
         var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(keyValue));
 

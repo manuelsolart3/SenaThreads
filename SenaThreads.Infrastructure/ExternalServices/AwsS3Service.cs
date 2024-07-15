@@ -90,7 +90,7 @@ public class AwsS3Service : IAwsS3Service
         return null;
     }
 
-    public string GeneratePresignedUrl(string key, double durationInMinutes = 240)
+    public string GeneratepresignedUrl(string key, double durationInMinutes = 240)
     {
         var request = new GetPreSignedUrlRequest
         {
@@ -120,4 +120,5 @@ public class AwsS3Service : IAwsS3Service
             throw new Exception($"Error occurred while deleting the file: {e.Message}", e);
         }
     }
+
 }

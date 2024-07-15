@@ -5,7 +5,7 @@ public class DeleteEventValidator : AbstractValidator<DeleteEventCommand>
 {
     public DeleteEventValidator()
     {
-        RuleFor(x => x.EventId).NotEmpty().WithMessage("EventId is required.");
-        RuleFor(x => x.UserId).NotEmpty().WithMessage("UserId is required.");
+        RuleFor(x => x.eventId).NotEmpty().WithMessage("EventId is required.");
+        RuleFor(x => x.userId).NotEmpty().WithMessage("UserId is required.");
     }
 }

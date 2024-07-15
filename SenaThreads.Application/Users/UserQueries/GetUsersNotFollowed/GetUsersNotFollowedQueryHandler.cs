@@ -32,9 +32,9 @@ public class GetUsersNotFollowedQueryHandler : IQueryHandler<GetUsersNotFollowed
         // Generar URLs prefirmadas para las imágenes de perfil
         foreach (var followed in paginatedFolloweds.List)
         {
-            if (!string.IsNullOrEmpty(followed.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(followed.ProfilePictureS3key))
             {
-                followed.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(followed.ProfilePictureS3Key);
+                followed.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(followed.ProfilePictureS3key);
             }
         }
 

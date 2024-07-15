@@ -18,7 +18,7 @@ public class TweetMapper : Profile
 
             //Mapeo de las propiedades del usuario creador
             .ForMember(dest => dest.TweetId, opt => opt.MapFrom(source => source.Id))
-            .ForMember(dest => dest.ProfilePictureS3Key, opt => opt.MapFrom(source => source.User.ProfilePictureS3Key))
+            .ForMember(dest => dest.ProfilePictureS3key, opt => opt.MapFrom(source => source.User.ProfilePictureS3Key))
             .ForMember(dest => dest.UserName, opt => opt.MapFrom(source => source.User.UserName))
             .ForMember(dest => dest.FirstName, opt => opt.MapFrom(source => source.User.FirstName))
             .ForMember(dest => dest.LastName, opt => opt.MapFrom(source => source.User.LastName));
@@ -32,7 +32,7 @@ public class TweetMapper : Profile
     .ForMember(dest => dest.CommentsCount, opt => opt.MapFrom(source => source.Comments.Count))
     .ForMember(dest => dest.CreatedOnUtc, opt => opt.MapFrom(source => source.CreatedOnUtc))
     .ForMember(dest => dest.TweetId, opt => opt.MapFrom(source => source.Id))
-    .ForMember(dest => dest.ProfilePictureS3Key, opt => opt.MapFrom(source => source.User.ProfilePictureS3Key))
+    .ForMember(dest => dest.ProfilePictureS3key, opt => opt.MapFrom(source => source.User.ProfilePictureS3Key))
     .ForMember(dest => dest.UserName, opt => opt.MapFrom(source => source.User.UserName))
     .ForMember(dest => dest.FirstName, opt => opt.MapFrom(source => source.User.FirstName))
     .ForMember(dest => dest.LastName, opt => opt.MapFrom(source => source.User.LastName));

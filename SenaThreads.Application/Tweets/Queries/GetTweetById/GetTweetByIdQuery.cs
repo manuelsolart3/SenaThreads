@@ -2,4 +2,4 @@
 using SenaThreads.Application.Dtos.Tweets;
 
 namespace SenaThreads.Application.Tweets.Queries.GetTweetByIdQuery;
-public record GetTweetByIdQuery(Guid TweetId) : IQuery<BasicTweetInfoDto>;
+public record GetTweetByIdQuery(Guid tweetId) : IQuery<BasicTweetInfoDto>;

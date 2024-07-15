@@ -2,5 +2,5 @@
 
 namespace SenaThreads.Application.Events.Commands.DeleteEvent;
 public record DeleteEventCommand (
-    Guid EventId,
-    string UserId): ICommand;
+    Guid eventId,
+    string userId): ICommand;

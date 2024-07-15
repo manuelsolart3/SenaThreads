@@ -34,17 +34,17 @@ public class GetUserMediaTweetsQueryHandler : IQueryHandler<GetUserMediaTweetsQu
     public async Task<Result<Pageable<BasicTweetInfoDto>>> Handle(GetUserMediaTweetsQuery request, CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserService.UserId;
-        var paginatedTweets = await FetchData(request.UserId, request.Page, request.PageSize, currentUserId);
+        var paginatedTweets = await FetchData(request.userId, request.page, request.pageSize, currentUserId);
 
         foreach (var tweet in paginatedTweets.List)
         {
             foreach (var attachment in tweet.Attachments)
             {
-                attachment.PresignedUrl = _awsS3Service.GeneratePresignedUrl(attachment.Key);
+                attachment.presignedUrl = _awsS3Service.GeneratepresignedUrl(attachment.key);
             }
-            if (!string.IsNullOrEmpty(tweet.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(tweet.ProfilePictureS3key))
             {
-                tweet.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(tweet.ProfilePictureS3Key);
+                tweet.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(tweet.ProfilePictureS3key);
             }
         }
 

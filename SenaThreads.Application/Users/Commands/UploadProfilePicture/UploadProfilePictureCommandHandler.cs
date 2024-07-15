@@ -27,10 +27,10 @@ public class UploadProfilePictureCommandHandler : ICommandHandler<UploadProfileP
         }
 
         // Subir la imagen de perfil a AWS S3
-        string profilePictureKey = await _awsS3Service.UploadFileToS3Async(request.ProfilePictureS3Key);
+        string profilePicturekey = await _awsS3Service.UploadFileToS3Async(request.ProfilePictureS3key);
 
         //Actualizar o subir la imagen de perfil
-        user.ProfilePictureS3Key = profilePictureKey;
+        user.ProfilePictureS3Key = profilePicturekey;
         
         //Guardar cambios en el usuario
         var updatedResult = await _userManager.UpdateAsync(user);

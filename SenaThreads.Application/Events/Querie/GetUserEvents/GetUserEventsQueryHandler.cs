@@ -37,17 +37,17 @@ public class GetUserEventsQueryHandler : IQueryHandler<GetUserEventsQuery, Pagea
     public async Task<Result<Pageable<EventDto>>> Handle(GetUserEventsQuery request, CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserService.UserId;
-        var paginatedEvents = await FetchData(request.UserId, request.Page, request.PageSize, currentUserId);
+        var paginatedEvents = await FetchData(request.userId, request.page, request.pageSize, currentUserId);
 
         foreach (var eventDto in paginatedEvents.List)
         {
             if (!string.IsNullOrEmpty(eventDto.Image))
             {
-                eventDto.Image = _awsS3Service.GeneratePresignedUrl(eventDto.Image);
+                eventDto.Image = _awsS3Service.GeneratepresignedUrl(eventDto.Image);
             }
-            if (!string.IsNullOrEmpty(eventDto.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(eventDto.ProfilePictureS3key))
             {
-                eventDto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(eventDto.ProfilePictureS3Key);
+                eventDto.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(eventDto.ProfilePictureS3key);
             }
         }
 

@@ -18,13 +18,13 @@ public class DeleteEventCommandHandler : ICommandHandler<DeleteEventCommand>
     public async Task<Result> Handle(DeleteEventCommand request, CancellationToken cancellationToken)
     {
         //Obtener el evetno que requiere eliminar
-        Event eventDelete = await _eventRepository.GetByIdAsync(request.EventId);
+        Event eventDelete = await _eventRepository.GetByIdAsync(request.eventId);
         //Verificar si el evento existe o si el usuario es el creador
         if (eventDelete == null)
         {
             return Result.Failure(EventError.NotFound);//No se encontro el evento 
         }
-        if (eventDelete.UserId != request.UserId)
+        if (eventDelete.UserId != request.userId)
         {
             return Result.Failure(EventError.Unauthorized);//No es el creador
         }

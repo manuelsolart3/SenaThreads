@@ -2,7 +2,7 @@
 public class CommentDto
 {
     public Guid CommentId { get; set; }
-    public string ProfilePictureS3Key { get; set; }
+    public string ProfilePictureS3key { get; set; }
     public string UserName { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }

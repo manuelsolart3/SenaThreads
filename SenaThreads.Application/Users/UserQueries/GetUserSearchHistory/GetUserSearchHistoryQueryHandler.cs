@@ -49,12 +49,12 @@ public class GetUserSearchHistoryQueryHandler : IQueryHandler<GetUserSearchHisto
                     Username = searchedUser.UserName,
                     FirstName = searchedUser.FirstName,
                     LastName = searchedUser.LastName,
-                    ProfilePictureS3Key = searchedUser.ProfilePictureS3Key
+                    ProfilePictureS3key = searchedUser.ProfilePictureS3Key
                 };
 
-                if (!string.IsNullOrEmpty(dto.ProfilePictureS3Key))
+                if (!string.IsNullOrEmpty(dto.ProfilePictureS3key))
                 {
-                    dto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(dto.ProfilePictureS3Key);
+                    dto.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(dto.ProfilePictureS3key);
                 }
 
                 userSearchHistoryDtos.Add(dto);

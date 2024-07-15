@@ -32,9 +32,9 @@ public class GetUserFollowersQueryHandler : IQueryHandler<GetUserFollowersQuery,
 
         foreach (var follower in followerUsers)
         {
-            if (!string.IsNullOrEmpty(follower.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(follower.ProfilePictureS3key))
             {
-                follower.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(follower.ProfilePictureS3Key);
+                follower.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(follower.ProfilePictureS3key);
             }
         }
 

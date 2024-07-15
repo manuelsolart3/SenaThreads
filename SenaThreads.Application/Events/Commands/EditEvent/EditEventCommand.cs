@@ -3,9 +3,9 @@ using SenaThreads.Application.Abstractions.Messaging;
 
 namespace SenaThreads.Application.Events.Commands.EditEvent;
 public record EditEventCommand(
-    Guid EventId,
-    string UserId,
-    string Title,
-    string? Description,
-    IFormFile? Image,
-    DateTime EventDate) : ICommand;
+    Guid eventId,
+    string userId,
+    string title,
+    string? description,
+    IFormFile? image,
+    DateTime eventDate) : ICommand;

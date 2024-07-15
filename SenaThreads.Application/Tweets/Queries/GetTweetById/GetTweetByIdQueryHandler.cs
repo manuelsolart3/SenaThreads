@@ -32,7 +32,7 @@ public class GetTweetByIdQueryHandler : IQueryHandler<GetTweetByIdQuery, BasicTw
     {
        var currentUserId = _currentUserService.UserId;
         
-        Tweet tweet = await FetchData(request.TweetId);
+        Tweet tweet = await FetchData(request.tweetId);
 
         if (tweet is null)
         {
@@ -53,7 +53,7 @@ public class GetTweetByIdQueryHandler : IQueryHandler<GetTweetByIdQuery, BasicTw
         // Gestionar las imágenes adjuntas
         foreach (var attachment in basicTweetInfoDto.Attachments)
         {
-            attachment.PresignedUrl = _awsS3Service.GeneratePresignedUrl(attachment.Key);
+            attachment.presignedUrl = _awsS3Service.GeneratepresignedUrl(attachment.key);
         }
 
         return Result.Success(basicTweetInfoDto);

@@ -47,7 +47,7 @@ public class GetUserInfoQueryHandler : IQueryHandler<GetUserInfoQuery, UserInfoD
         // Agregar la lógica para la imagen de perfil
         if (!string.IsNullOrEmpty(user.ProfilePictureS3Key))
         {
-            userInfoDto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(user.ProfilePictureS3Key);
+            userInfoDto.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(user.ProfilePictureS3Key);
         }
 
         return Result.Success(userInfoDto);

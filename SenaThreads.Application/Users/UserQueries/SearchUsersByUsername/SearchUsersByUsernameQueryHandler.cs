@@ -49,9 +49,9 @@ public class SearchUsersByUsernameQueryHandler : IQueryHandler<SearchUsersByUser
         // Generar URLs prefirmadas para las imágenes de perfil 
         foreach (var userDto in userDtos)
         {
-            if (!string.IsNullOrEmpty(userDto.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(userDto.ProfilePictureS3key))
             {
-                userDto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(userDto.ProfilePictureS3Key);
+                userDto.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(userDto.ProfilePictureS3key);
             }
 
             // Registrar la búsqueda para cada usuario encontrado

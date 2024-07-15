@@ -13,5 +13,5 @@ public class NotificationDto
     public string Path { get; set; }
     public bool IsRead { get; set; }
     public DateTime CreatedOnUtc { get; set; }
-    public string NotifierProfilePictureS3Key { get; set; }
+    public string NotifierProfilePictureS3key { get; set; }
 }

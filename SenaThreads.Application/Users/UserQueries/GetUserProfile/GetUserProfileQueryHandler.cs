@@ -65,7 +65,7 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
 
         if (!string.IsNullOrEmpty(user.ProfilePictureS3Key))
         {
-            userProfileDto.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(user.ProfilePictureS3Key);
+            userProfileDto.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(user.ProfilePictureS3Key);
         }
 
         // Retornar el DTO de perfil de usuario

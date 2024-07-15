@@ -24,7 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Configuración de autenticación JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 //Obtener la key de la configuracion y convertila en arreglo de byte
-var key = Encoding.ASCII.GetBytes(jwtSettings.Key);
+var key = Encoding.ASCII.GetBytes(jwtSettings.key);
 
 // Configuración de la aplicación y la infraestructura
 builder.Services.AddApplication();

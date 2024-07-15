@@ -37,19 +37,20 @@ public class GetAllTweetsQueryHandler : IQueryHandler<GetAllTweetsQuery, Pageabl
     {
         var currentUserId =  _currentUserService.UserId;
 
-        var paginatedTweets = await FetchData(request.Page, request.PageSize, currentUserId);
+        var paginatedTweets = await FetchData(request.page, request.pageSize, currentUserId);
 
         foreach (var tweet in paginatedTweets.List)
         {
             foreach (var attachment in tweet.Attachments)
             {
-                attachment.PresignedUrl = _awsS3Service.GeneratePresignedUrl(attachment.Key);
+                attachment.presignedUrl = _awsS3Service.GeneratepresignedUrl(attachment.key);
             }
-            if (!string.IsNullOrEmpty(tweet.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(tweet.ProfilePictureS3key))
             {
-                tweet.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(tweet.ProfilePictureS3Key);
+                tweet.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(tweet.ProfilePictureS3key);
             }
         }
+        
 
         return Result.Success(paginatedTweets);
     }

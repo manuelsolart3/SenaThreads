@@ -27,7 +27,7 @@ public class GetUserNotificationsQueryHandler : IQueryHandler<GetUserNotificatio
 
     public async Task<Result<Pageable<NotificationDto>>> Handle(GetUserNotificationsQuery request, CancellationToken cancellationToken)
     {
-        var paginatedNotifications = await FetchData(request.UserId, request.Page, request.PageSize);
+        var paginatedNotifications = await FetchData(request.userId, request.page, request.pageSize);
         return Result.Success(paginatedNotifications);
     }
 
@@ -64,10 +64,10 @@ public class GetUserNotificationsQueryHandler : IQueryHandler<GetUserNotificatio
                 notificationDto.NotifierFirstName = notifier.FirstName;
                 notificationDto.NotifierLastName = notifier.LastName;
 
-                // Generar la URL firmada de la imagen del perfil si existe NotifierProfilePictureS3Key
+                // Generar la URL firmada de la imagen del perfil si existe NotifierProfilePictureS3key
                 if (!string.IsNullOrEmpty(notifier.ProfilePictureS3Key))
                 {
-                    notificationDto.NotifierProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(notifier.ProfilePictureS3Key);
+                    notificationDto.NotifierProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(notifier.ProfilePictureS3Key);
                 }
             }
 

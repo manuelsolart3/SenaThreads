@@ -23,23 +23,23 @@ public class EditEventCommandHandler : ICommandHandler<EditEventCommand>
     public async Task<Result> Handle(EditEventCommand request, CancellationToken cancellationToken)
     {
         //Buscar evento existente
-        Event existingEvent = await _eventRepository.FindByIdAsync(request.EventId);
+        Event existingEvent = await _eventRepository.FindByIdAsync(request.eventId);
 
         if (existingEvent is null)
         {
             return Result.Failure(EventError.NotFound);
         }
 
-        if (existingEvent.UserId != request.UserId)
+        if (existingEvent.UserId != request.userId)
         {
             return Result.Failure(UserError.Unauthorized);
         }
 
         // Actualizar la imagen si se ha proporcionado una nueva
-        if (request.Image != null)
+        if (request.image != null)
         {
             // Subir la nueva imagen a S3
-            string newImageUrl = await _awsS3Service.UploadFileToS3Async(request.Image);
+            string newImageUrl = await _awsS3Service.UploadFileToS3Async(request.image);
 
             // Eliminar la imagen anterior si existe
             if (!string.IsNullOrEmpty(existingEvent.Image))
@@ -52,24 +52,24 @@ public class EditEventCommandHandler : ICommandHandler<EditEventCommand>
         }
 
         // Solo actualizar la descripción si ha cambiado
-        if (!string.IsNullOrEmpty(request.Description) && request.Description != existingEvent.Description)
+        if (!string.IsNullOrEmpty(request.description) && request.description != existingEvent.Description)
         {
-            existingEvent.Description = request.Description;
+            existingEvent.Description = request.description;
         }
 
         // Mantener la fecha del evento si no se ha proporcionado una nueva fecha
-        if (request.EventDate == default)
+        if (request.eventDate == default)
         {
-            request = request with { EventDate = existingEvent.EventDate };
+            request = request with { eventDate = existingEvent.EventDate };
         }
 
         // Solo actualizar la fecha del evento si ha cambiado
-        if (request.EventDate != existingEvent.EventDate)
+        if (request.eventDate != existingEvent.EventDate)
         {
-            existingEvent.EventDate = request.EventDate;
+            existingEvent.EventDate = request.eventDate;
         }
 
-        existingEvent.Title = request.Title;
+        existingEvent.Title = request.title;
         _eventRepository.Update(existingEvent);
 
         // Guardar cambios en la base de datos

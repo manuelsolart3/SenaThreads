@@ -22,17 +22,17 @@ public class GetUserRetweetsQueryHandler : IQueryHandler<GetUserRetweetsQuery, P
 
     public async Task<Result<Pageable<RetweetDto>>> Handle(GetUserRetweetsQuery request, CancellationToken cancellationToken)
     {
-        var paginatedRetweets = await FetchData(request.UserId, request.Page, request.PageSize);
+        var paginatedRetweets = await FetchData(request.userId, request.page, request.pageSize);
 
         foreach (var tweet in paginatedRetweets.List)
         {
             foreach (var attachment in tweet.Attachments)
             {
-                attachment.PresignedUrl = _awsS3Service.GeneratePresignedUrl(attachment.Key);
+                attachment.presignedUrl = _awsS3Service.GeneratepresignedUrl(attachment.key);
             }
-            if (!string.IsNullOrEmpty(tweet.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(tweet.ProfilePictureS3key))
             {
-                tweet.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(tweet.ProfilePictureS3Key);
+                tweet.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(tweet.ProfilePictureS3key);
             }
         }
 

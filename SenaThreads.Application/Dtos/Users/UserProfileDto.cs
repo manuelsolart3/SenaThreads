@@ -9,5 +9,5 @@ public class UserProfileDto
     public DateOnly DateOfBirth { get; set; }
     public  string PhoneNumber { get; set; }
     public string Biography { get; set; }
-    public string ProfilePictureS3Key { get; set; }
+    public string ProfilePictureS3key { get; set; }
 }

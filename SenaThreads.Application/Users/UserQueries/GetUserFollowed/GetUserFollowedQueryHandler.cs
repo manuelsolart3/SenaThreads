@@ -29,9 +29,9 @@ public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, F
 
         foreach (var followed in followedUsers)
         {
-            if (!string.IsNullOrEmpty(followed.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(followed.ProfilePictureS3key))
             {
-                followed.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(followed.ProfilePictureS3Key);
+                followed.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(followed.ProfilePictureS3key);
             }
         }
 

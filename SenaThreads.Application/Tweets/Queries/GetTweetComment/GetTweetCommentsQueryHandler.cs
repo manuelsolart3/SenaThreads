@@ -36,13 +36,13 @@ public class GetTweetCommentsQueryHandler : IQueryHandler<GetTweetCommentsQuery,
     public async Task<Result<Pageable<CommentDto>>> Handle(GetTweetCommentsQuery request, CancellationToken cancellationToken)
     {
         var currentUserId = _currentUserService.UserId;
-        var paginatedComments = await FetchData(request.TweetId, request.Page, request.PageSize, currentUserId);
+        var paginatedComments = await FetchData(request.tweetId, request.page, request.pageSize, currentUserId);
 
         foreach (var comment in paginatedComments.List)
         {
-            if (!string.IsNullOrEmpty(comment.ProfilePictureS3Key))
+            if (!string.IsNullOrEmpty(comment.ProfilePictureS3key))
             {
-                comment.ProfilePictureS3Key = _awsS3Service.GeneratePresignedUrl(comment.ProfilePictureS3Key);
+                comment.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(comment.ProfilePictureS3key);
             }
         }
         return Result.Success(paginatedComments);

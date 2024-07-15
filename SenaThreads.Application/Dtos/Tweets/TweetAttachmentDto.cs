@@ -1,6 +1,6 @@
 ﻿namespace SenaThreads.Application.Dtos.Tweets;
 public class TweetAttachmentDto
 {
-    public string Key { get; set; }
-    public string PresignedUrl { get; set; }
+    public string key { get; set; }
+    public string presignedUrl { get; set; }
 }
