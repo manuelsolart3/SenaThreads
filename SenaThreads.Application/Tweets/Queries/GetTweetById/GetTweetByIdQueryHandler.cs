@@ -56,6 +56,11 @@ public class GetTweetByIdQueryHandler : IQueryHandler<GetTweetByIdQuery, BasicTw
             attachment.presignedUrl = _awsS3Service.GeneratepresignedUrl(attachment.key);
         }
 
+        if (!string.IsNullOrEmpty(tweetDto.ProfilePictureS3key))
+        {
+            tweetDto.ProfilePictureS3key = _awsS3Service.GeneratepresignedUrl(tweetDto.ProfilePictureS3key);
+        }
+
         return Result.Success(basicTweetInfoDto);
     }
 
