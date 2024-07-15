@@ -27,7 +27,7 @@ public class GetUsersNotFollowedQueryHandler : IQueryHandler<GetUsersNotFollowed
 
     public async Task<Result<Pageable<FollowerDto>>> Handle(GetUsersNotFollowedQuery request, CancellationToken cancellationToken)
     {
-        var paginatedFolloweds = await FetchData(request.UserId, request.Page, request.PageSize, cancellationToken);
+        var paginatedFolloweds = await FetchData(request.userId, request.page, request.pageSize, cancellationToken);
 
         // Generar URLs prefirmadas para las imágenes de perfil
         foreach (var followed in paginatedFolloweds.List)

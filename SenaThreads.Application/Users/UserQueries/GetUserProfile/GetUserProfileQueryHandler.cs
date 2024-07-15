@@ -33,7 +33,7 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
 
     public async Task<Result<UserProfileDto>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
     {
-        User user = await _userManager.FindByIdAsync(request.UserId);
+        User user = await _userManager.FindByIdAsync(request.userId);
 
         if (user is null)
         {

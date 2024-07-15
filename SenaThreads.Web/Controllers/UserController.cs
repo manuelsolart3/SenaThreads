@@ -264,7 +264,7 @@ public class UserController : ControllerBase
     }
 
     //OBTENER INFO DEl REGISTRO DENTRO DE "EDITAR PERFIL"
-    [HttpGet("{userId}/Register-Info")]
+    [HttpGet("{userId}/register-info")]
     [Authorize]
     public async Task<IActionResult> GetUserRegistrationInfo(string userId)
     {
@@ -376,7 +376,7 @@ public class UserController : ControllerBase
             return Unauthorized();
         }
 
-        var query = new GetUserSearchHistoryQuery(UserId: userId, Limit: limit);
+        var query = new GetUserSearchHistoryQuery(userId: userId, limit: limit);
         var result = await _mediator.Send(query);
 
         if (result.IsSuccess)

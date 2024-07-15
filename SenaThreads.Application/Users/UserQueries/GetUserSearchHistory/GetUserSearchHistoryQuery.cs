@@ -2,4 +2,4 @@
 using SenaThreads.Application.Dtos.Users;
 
 namespace SenaThreads.Application.Users.UserQueries.GetUserSearchHistory;
-public record GetUserSearchHistoryQuery(string UserId, int Limit) : IQuery<List<UserSearchHistoryDto>>;
+public record GetUserSearchHistoryQuery(string userId, int limit) : IQuery<List<UserSearchHistoryDto>>;

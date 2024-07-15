@@ -16,14 +16,14 @@ public class CheckUserBlockStatusQueryHandler : IQueryHandler<CheckUserBlockStat
     }
     public async Task<Result<UserBlockStatusDto>> Handle(CheckUserBlockStatusQuery request, CancellationToken cancellationToken)
     {
-        var isBlocked1 = await _userBlockRepository.IsBlocked(request.BlockedUserId, request.BlockByUserId);
-        var isBlocked2 = await _userBlockRepository.IsBlocked(request.BlockByUserId, request.BlockedUserId);
+        var isBlocked1 = await _userBlockRepository.IsBlocked(request.blockedUserId, request.blockByUserId);
+        var isBlocked2 = await _userBlockRepository.IsBlocked(request.blockByUserId, request.blockedUserId);
 
         if (isBlocked1 || isBlocked2)
         {
             // Determinar quién es el bloqueado y quién lo bloqueó
-            string blockedUserId = isBlocked1 ? request.BlockedUserId : request.BlockByUserId;
-            string blockByUserId = isBlocked1 ? request.BlockByUserId : request.BlockedUserId;
+            string blockedUserId = isBlocked1 ? request.blockedUserId : request.blockByUserId;
+            string blockByUserId = isBlocked1 ? request.blockByUserId : request.blockedUserId;
 
             return new UserBlockStatusDto
             {

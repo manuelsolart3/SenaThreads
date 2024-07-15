@@ -2,4 +2,4 @@
 using SenaThreads.Application.Dtos.Users;
 
 namespace SenaThreads.Application.Users.UserQueries.GetUserRegistrationInfo;
-public record GetUserRegistrationInfoQuery(string UserId) : IQuery<UserRegistrationInfoDto>;
+public record GetUserRegistrationInfoQuery(string userId) : IQuery<UserRegistrationInfoDto>;

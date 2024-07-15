@@ -2,4 +2,4 @@
 using SenaThreads.Application.Dtos.Users;
 
 namespace SenaThreads.Application.Users.UserQueries.GetUserProfile;
-public record GetUserProfileQuery(string UserId) : IQuery<UserProfileDto>;
+public record GetUserProfileQuery(string userId) : IQuery<UserProfileDto>;

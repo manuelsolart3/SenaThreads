@@ -28,9 +28,9 @@ public class GetUserSearchHistoryQueryHandler : IQueryHandler<GetUserSearchHisto
     public async Task<Result<List<UserSearchHistoryDto>>> Handle(GetUserSearchHistoryQuery request, CancellationToken cancellationToken)
     {
         var searchHistory = await _searchUserHistoryRepository.Queryable()
-            .Where(h => h.UserId == request.UserId)
+            .Where(h => h.UserId == request.userId)
             .OrderByDescending(h => h.SearchedAt)
-            .Take(request.Limit)
+            .Take(request.limit)
             .Select(h => new { h.Id, h.SearchedUserId, h.SearchedAt })
             .ToListAsync(cancellationToken);
 

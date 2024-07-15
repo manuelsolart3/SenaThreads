@@ -28,11 +28,11 @@ public class SearchUsersByUsernameQueryHandler : IQueryHandler<SearchUsersByUser
 
     public async Task<Result<Pageable<UserDto>>> Handle(SearchUsersByUsernameQuery request, CancellationToken cancellationToken)
     {
-        var searchTerm = request.SearchTerm.ToLower();
+        var searchTerm = request.searchTerm.ToLower();
 
         // Filtrar y ordenar a nivel de base de datos
         var usersQueryable = _userManager.Users
-         .Where(u => u.Id != request.UserId && u.UserName.ToLower().Contains(searchTerm))
+         .Where(u => u.Id != request.userId && u.UserName.ToLower().Contains(searchTerm))
          .OrderBy(u => u.UserName);
 
         // Obtener el conteo total de usuarios filtrados
@@ -40,8 +40,8 @@ public class SearchUsersByUsernameQueryHandler : IQueryHandler<SearchUsersByUser
 
         // Aplicar paginación
         var pagedUsers = await usersQueryable
-            .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize)
+            .Skip((request.page - 1) * request.pageSize)
+            .Take(request.pageSize)
             .ToListAsync(cancellationToken);
 
         var userDtos = _mapper.Map<List<UserDto>>(pagedUsers);
@@ -55,7 +55,7 @@ public class SearchUsersByUsernameQueryHandler : IQueryHandler<SearchUsersByUser
             }
 
             // Registrar la búsqueda para cada usuario encontrado
-            var searchHistory = new SearchUserHistory(request.UserId, userDto.UserId);
+            var searchHistory = new SearchUserHistory(request.userId, userDto.UserId);
             await _searchUserHistoryRepository.AddAsync(searchHistory);
         }
 

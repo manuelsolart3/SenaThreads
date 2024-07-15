@@ -3,6 +3,6 @@ using SenaThreads.Application.Dtos.Users;
 using SenaThreads.Domain.Abstractions;
 
 namespace SenaThreads.Application.Users.UserQueries.GetUserFollowed;
-public record GetUserFollowedQuery(string UserId, int? Limit) : IQuery<FollowerResultDto>;
+public record GetUserFollowedQuery(string userId, int? limit) : IQuery<FollowerResultDto>;
 
 

@@ -25,7 +25,7 @@ public class GetUserFollowedQueryHandler : IQueryHandler<GetUserFollowedQuery, F
     }
     public async Task<Result<FollowerResultDto>> Handle(GetUserFollowedQuery request, CancellationToken cancellationToken)
     {
-        var (followedUsers, totalCount) = await FetchData(request.UserId, request.Limit);
+        var (followedUsers, totalCount) = await FetchData(request.userId, request.limit);
 
         foreach (var followed in followedUsers)
         {
