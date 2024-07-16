@@ -10,6 +10,7 @@ using SenaThreads.Application.Tweets.Commands.Retweet;
 using SenaThreads.Application.Tweets.Queries.GetAllTweets;
 using SenaThreads.Application.Tweets.Queries.GetTweetByIdQuery;
 using SenaThreads.Application.Tweets.Queries.GetTweetComments;
+using SenaThreads.Application.Tweets.Queries.GetTweetReactions;
 using SenaThreads.Application.Tweets.Queries.GetUserMediaTweets;
 using SenaThreads.Application.Tweets.Queries.GetUserRetweets;
 using SenaThreads.Application.Tweets.Queries.GetUserTweets;
@@ -77,6 +78,21 @@ public class TweetController : ControllerBase //proporciona funcionalidades
             return BadRequest(result.Error);
         }
     }
+
+    //OBTENER REACCIONES DE UN TWEET
+    [HttpGet("reactions")]
+    public async Task<IActionResult> GetTweetReactions([FromQuery] GetTweetReactionsQuery query, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+
+        return BadRequest(result.Error);
+    }
+
 
     //RETWEETEAR UN TWEET
     [HttpPost("retweet")]

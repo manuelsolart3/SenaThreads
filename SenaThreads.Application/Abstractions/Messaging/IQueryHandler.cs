@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using SenaThreads.Application.Dtos.Tweets;
+using SenaThreads.Application.Tweets.Queries.GetTweetReactions;
 using SenaThreads.Domain.Abstractions;
 
 namespace SenaThreads.Application.Abstractions.Messaging;
