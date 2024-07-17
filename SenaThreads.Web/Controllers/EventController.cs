@@ -6,6 +6,7 @@ using SenaThreads.Application.Events.Commands.CreateEvent;
 using SenaThreads.Application.Events.Commands.DeleteEvent;
 using SenaThreads.Application.Events.Commands.EditEvent;
 using SenaThreads.Application.Events.Querie.GetAllEvents;
+using SenaThreads.Application.Events.Querie.GetEventById;
 using SenaThreads.Application.Events.Querie.GetUserEvents;
 
 namespace SenaThreads.Web.Controllers;
@@ -95,6 +96,22 @@ public class EventController : ControllerBase
         if (result.IsSuccess)
         {
             return Ok("Event Edited successfully");
+        }
+        else
+        {
+            return BadRequest(result.Error);
+        }
+    }
+
+    //OBTENER EVENTOS POR SU ID
+    [HttpGet("eventId")]
+    public async Task<ActionResult> GetEventById([FromQuery] GetEventByIdQuery query, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(query, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
         }
         else
         {
