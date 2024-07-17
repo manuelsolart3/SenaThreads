@@ -6,6 +6,7 @@ using SenaThreads.Application.Tweets.Commands.DeleteComment;
 using SenaThreads.Application.Tweets.Commands.DeleteTweet;
 using SenaThreads.Application.Tweets.Commands.PostTweet;
 using SenaThreads.Application.Tweets.Commands.ReactToTweet;
+using SenaThreads.Application.Tweets.Commands.RemoveReaction;
 using SenaThreads.Application.Tweets.Commands.Retweet;
 using SenaThreads.Application.Tweets.Queries.GetAllTweets;
 using SenaThreads.Application.Tweets.Queries.GetTweetByIdQuery;
@@ -110,6 +111,8 @@ public class TweetController : ControllerBase //proporciona funcionalidades
         }
     }
 
+
+
     //ELIMINAR UN TWEET
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteTweet([FromBody] DeleteTweetCommand command)
@@ -119,6 +122,22 @@ public class TweetController : ControllerBase //proporciona funcionalidades
         if (result.IsSuccess)
         {
             return Ok("Tweet deleted successfully");
+        }
+        else
+        {
+            return BadRequest(result.Error);
+        }
+    }
+
+    // ELIMINAR REACCIÓN DE UN TWEET
+    [HttpDelete("delete/reaction")]
+    public async Task<IActionResult> RemoveReaction([FromBody] RemoveReactionCommand command)
+    {
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok("Reaction removed successfully");
         }
         else
         {
