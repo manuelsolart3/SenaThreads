@@ -18,6 +18,7 @@ using SenaThreads.Application.Users.Commands.UploadProfilePicture;
 using SenaThreads.Application.Users.Commands.ValidateToken;
 using SenaThreads.Application.Users.Commands.VisitProfile;
 using SenaThreads.Application.Users.UserQueries.CheckUserBlockStatus;
+using SenaThreads.Application.Users.UserQueries.CheckUserReaction;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowed;
 using SenaThreads.Application.Users.UserQueries.GetUserFollowers;
 using SenaThreads.Application.Users.UserQueries.GetUserInfo;
@@ -435,4 +436,21 @@ public class UserController : ControllerBase
         }
     }
 
+    //VERIFICAR SI EXISTE UNA REACCION EN UN TWEET ESPECIFICO
+    [HttpGet("checkReaction")]
+    [Authorize]
+    public async Task<IActionResult> CheckUserReaction(string userId, Guid tweetId)
+    {
+        var query = new CheckUserReactionQuery(userId, tweetId);
+        var result = await _mediator.Send(query);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+        else
+        {
+            return NotFound(result.Error);
+        }
+    }
 }
