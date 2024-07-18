@@ -16,19 +16,22 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
     private readonly IAwsS3Service _awsS3Service;
     private readonly IBlockFilterService _blockFilterService;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IUserBlockRepository _userBlockRepository;
 
     public GetUserProfileQueryHandler(
         IMapper mapper,
         UserManager<User> userManager,
         IAwsS3Service awsS3Service,
         IBlockFilterService blockFilterService,
-        ICurrentUserService currentUserService)
+        ICurrentUserService currentUserService,
+        IUserBlockRepository userBlockRepository)
     {
         _mapper = mapper;
         _userManager = userManager;
         _awsS3Service = awsS3Service;
         _blockFilterService = blockFilterService;
         _currentUserService = currentUserService;
+        _userBlockRepository = userBlockRepository;
     }
 
     public async Task<Result<UserProfileDto>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
@@ -46,7 +49,10 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
         UserProfileDto userProfileDto;
 
         if (!filteredContent.Any())
-        {
+        { 
+            // Determinar el tipo de bloqueo
+            bool isCurrentUserBlocked = await _userBlockRepository.IsBlocked(currentUserId, user.Id);
+
             // Si el contenido está bloqueado, devolver un DTO con información básica.
             userProfileDto = new UserProfileDto
             {
@@ -54,10 +60,11 @@ public class GetUserProfileQueryHandler : IQueryHandler<GetUserProfileQuery, Use
                 UserName = user.UserName,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                // Los demás campos se dejan en blanco o con valores predeterminados.
+                
+                BlockType = isCurrentUserBlocked? "you have been blocked by this user" : "you have blocked this user"
             };
 
-            return Result.Success(userProfileDto);
+           return Result.Success(userProfileDto);
         }
 
         // Mapear la entidad de usuario a un DTO de perfil

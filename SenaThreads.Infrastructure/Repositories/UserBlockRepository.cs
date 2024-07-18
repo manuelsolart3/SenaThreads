@@ -26,4 +26,5 @@ public class UserBlockRepository : Repository<UserBlock>, IUserBlockRepository
 
         return new HashSet<string>(blockedUsers);
     }
+
 }
