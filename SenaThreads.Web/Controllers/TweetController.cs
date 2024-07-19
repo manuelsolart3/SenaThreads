@@ -8,6 +8,7 @@ using SenaThreads.Application.Tweets.Commands.PostTweet;
 using SenaThreads.Application.Tweets.Commands.ReactToTweet;
 using SenaThreads.Application.Tweets.Commands.RemoveReaction;
 using SenaThreads.Application.Tweets.Commands.Retweet;
+using SenaThreads.Application.Tweets.Commands.UpdateReaction;
 using SenaThreads.Application.Tweets.Queries.GetAllTweets;
 using SenaThreads.Application.Tweets.Queries.GetTweetByIdQuery;
 using SenaThreads.Application.Tweets.Queries.GetTweetComments;
@@ -15,6 +16,7 @@ using SenaThreads.Application.Tweets.Queries.GetTweetReactions;
 using SenaThreads.Application.Tweets.Queries.GetUserMediaTweets;
 using SenaThreads.Application.Tweets.Queries.GetUserRetweets;
 using SenaThreads.Application.Tweets.Queries.GetUserTweets;
+using SenaThreads.Application.Users.Commands.UpdateProfile;
 
 namespace SenaThreads.Web.Controllers;
 
@@ -248,6 +250,20 @@ public class TweetController : ControllerBase //proporciona funcionalidades
         return BadRequest(result.Error);
     }
 
-
+    //ACTUALIZAR TIPO DE REACCION
+    [HttpPut("update-reaction")]
+    [Authorize]
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateReactionCommand command)
+    {
+        var result = await _mediator.Send(command);
+        if (result.IsSuccess)
+        {
+            return Ok("Reaction Updated succesfully");
+        }
+        else
+        {
+            return BadRequest(result.Error);
+        }
+    }
 
 }
