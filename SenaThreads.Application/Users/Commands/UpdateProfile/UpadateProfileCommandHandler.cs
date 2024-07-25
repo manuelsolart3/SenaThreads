@@ -42,6 +42,11 @@ public class UpadateProfileCommandHandler : ICommandHandler<UpadateProfileComman
             user.DateOfBirth = request.dateOfBirth.Value;
         }
 
+        if (request.countryCode is not null)
+        {
+            user.CountryCode = request.countryCode;
+        }
+
 
         //Guardar los cambios
         var updateResult = await _userManager.UpdateAsync(user);

@@ -88,7 +88,7 @@ public class EventController : ControllerBase
     }
 
     //EDITAR UN EVENTO EXISTENTE
-    [HttpPost("edit")]
+    [HttpPatch("edit")]
     public async Task<IActionResult> EditEvent([FromForm] EditEventCommand command)
     {
         var result = await _mediator.Send(command);

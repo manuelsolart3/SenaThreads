@@ -7,4 +7,5 @@ public record UpadateProfileCommand(
     string? phoneNumber,
     string? biography,
     string? city,
-    DateOnly? dateOfBirth) : ICommand;
+    DateOnly? dateOfBirth,
+    string? countryCode) : ICommand;

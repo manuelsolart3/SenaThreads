@@ -17,5 +17,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.City).HasMaxLength(25).IsRequired(false);
         builder.Property(u => u.DateOfBirth).IsRequired(false);
         builder.Property(u => u.ProfilePictureS3Key).IsRequired(false);
+        builder.Property(u => u.CountryCode).HasMaxLength(5).IsRequired(false);
     }
 }

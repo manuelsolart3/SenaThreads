@@ -15,6 +15,7 @@ public class User : IdentityUser
     public string Biography { get; set; }
     public string City { get; set; }
     public DateOnly? DateOfBirth { get; set; }
+    public string CountryCode { get; set; }
 
 
     //Propiedades de navegacion 
