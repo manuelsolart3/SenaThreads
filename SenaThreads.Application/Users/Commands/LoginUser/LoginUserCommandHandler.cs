@@ -30,7 +30,7 @@ public class LoginUserCommandHandler : ICommandHandler<LoginUserCommand, object>
         if (result)
         {
             var token = _jwtService.GenerateToken(user);
-            return Result.Success<object>(new { Token = token });
+            return Result.Success<object>(new {Userid = user.Id, Token = token });
         }
         else
         {
