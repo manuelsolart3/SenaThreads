@@ -56,6 +56,8 @@ public class GetUserEventsQueryHandler : IQueryHandler<GetUserEventsQuery, Pagea
 
     public async Task<Pageable<EventDto>> FetchData (string userId, int page, int pageSize, string currentUserId)
     {
+        int start = pageSize * (page - 1);
+
         if (await _userBlockRepository.IsBlocked(currentUserId, userId) ||
             await _userBlockRepository.IsBlocked(userId, currentUserId))
         {
@@ -65,9 +67,6 @@ public class GetUserEventsQueryHandler : IQueryHandler<GetUserEventsQuery, Pagea
                 Count = 0,
             };
         }
-
-
-        int start = pageSize * (page - 1);
 
         //Construuir la consulta
         IQueryable<Event> eventQuery = _eventRepository.Queryable()
@@ -89,7 +88,7 @@ public class GetUserEventsQueryHandler : IQueryHandler<GetUserEventsQuery, Pagea
         return new Pageable<EventDto>
         {
             List = userEventDtos,
-            Count = userEventDtos.Count
+            Count = totalCount
         };
 
     }

@@ -23,6 +23,12 @@ public class PostTweetCommandHandler : ICommandHandler<PostTweetCommand>
 
     public async Task<Result> Handle(PostTweetCommand request, CancellationToken cancellationToken)
     {
+        // Validar que al menos uno de los campos este presente
+        if (string.IsNullOrWhiteSpace(request.text) && (request.attachments == null || !request.attachments.Any()))
+        {
+            return Result.Failure(TweetError.MustContainSomething);
+        }
+
         List<TweetAttachment> tweetAttachments = new List<TweetAttachment>();
 
         // Crear el nuevo tweet

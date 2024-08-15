@@ -1,4 +1,5 @@
 ﻿using SenaThreads.Domain.Abstractions;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SenaThreads.Domain.Tweets;
 public static class TweetError
@@ -18,8 +19,12 @@ public static class TweetError
 
     public static readonly Error CommentNotFound = new(
          "Comment.NotFound",
-         "The comment does not exist");
+    "The comment does not exist");
+    
+    public static readonly Error MustContainSomething = new(
+         "tweet.MustContainSomething",
+    "The tweet must contain text or at least one image");
 
 
-
+    
 }

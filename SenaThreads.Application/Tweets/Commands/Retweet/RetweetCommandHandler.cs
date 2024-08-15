@@ -71,5 +71,6 @@ public class RetweetCommandHandler : ICommandHandler<RetweetCommand>
             .Include(tweet => tweet.Retweets)
             .FirstOrDefaultAsync();
     }
+
 }
 

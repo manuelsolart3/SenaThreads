@@ -2,8 +2,10 @@
 
 public enum ReactionType
 {
-    Like,
-    Haha,
-    Angry,
-    Love,
+    //REACCIONES
+    Like = 1,
+    Haha = 2,
+    Love = 3,
+    Angry = 4  
+
 }

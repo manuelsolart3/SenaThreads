@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using SenaThreads.Application.Abstractions.Messaging;
 using SenaThreads.Application.IRepositories;
 using SenaThreads.Domain.Abstractions;
@@ -70,4 +71,5 @@ public class ReactToTweetCommandHandler : ICommandHandler<ReactToTweetCommand>
             .Include(tweet => tweet.Reactions)
             .FirstOrDefaultAsync();
     }
-}
+
+    }

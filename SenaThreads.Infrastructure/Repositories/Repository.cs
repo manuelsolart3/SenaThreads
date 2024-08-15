@@ -39,4 +39,9 @@ public class Repository<TEntity> : IRepository<TEntity>
     {
         return _dbSet;
     }
+
+    public void DeleteRange(IEnumerable<TEntity> entities)
+    {
+        _dbSet.RemoveRange(entities);
+    }
 }
