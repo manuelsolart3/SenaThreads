@@ -1,6 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SenaThreads.Application.Events.Commands.DeleteEvent;
+using SenaThreads.Application.Notifications.Commands.DeleteAllUserNotifications;
+using SenaThreads.Application.Notifications.Commands.DeleteUserNotification;
 using SenaThreads.Application.Notifications.Commands.MarkNotificationAsRead;
 using SenaThreads.Application.Notifications.Commands.SendNotification;
 using SenaThreads.Application.Notifications.QueriesN.GetUserNotifications;
@@ -66,6 +69,37 @@ public class NotificationController : ControllerBase
             return BadRequest(result.Error);
         }
     }
+
+    [HttpDelete("delete-all")]
+    public async Task<IActionResult> DeleteAllNotifications([FromBody] DeleteAllUserNotificationsCommand command, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(command, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok("Notifications deleted successfully");
+        }
+        else
+        {
+            return BadRequest(result.Error); 
+        }
+    }
+
+    [HttpDelete("delete")]
+    public async Task<IActionResult> DeleteUserNotification([FromBody] DeleteUserNotificationCommand command, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(command, cancellationToken);
+
+        if (result.IsSuccess)
+        {
+            return Ok("Notification deleted successfully");
+        }
+        else
+        {
+            return BadRequest(result.Error);
+        }
+    }
+
 }
 
 
